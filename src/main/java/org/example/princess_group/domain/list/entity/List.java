@@ -1,5 +1,9 @@
 package org.example.princess_group.domain.list.entity;
 
-public class List {
+import jakarta.persistence.Entity;
+import org.example.princess_group.global.entity.BaseEntity;
+
+@Entity
+public class List extends BaseEntity {
 
 }
