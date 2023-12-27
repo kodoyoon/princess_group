@@ -193,4 +193,44 @@ class CardControllerTest extends ControllerTest {
                 );
         }
     }
+
+    @DisplayName("카드 목록 조회 API")
+    @Nested
+    class ReadCards {
+
+        @DisplayName("성공 200")
+        @Test
+        void success() throws Exception {
+            // given
+            ReadCardResponse response = ReadCardResponse.builder()
+                .cardId(1L)
+                .order(1)
+                .modifiedAt(LocalDateTime.now())
+                .color("blue")
+                .deadline(LocalDateTime.now())
+                .name("test")
+                .description("test description")
+                .workers(List.of())
+                .build();
+
+            given(cardService.readCards(any()))
+                .willReturn(List.of(response));
+            // when // then
+            mockMvc.perform(get("/api/cards"))
+                .andDo(print())
+                .andExpectAll(
+                    status().isOk(),
+                    jsonPath("$.status").value(HttpStatus.OK.name()),
+                    jsonPath("$.msg").value("카드 목록 조회 성공했습니다."),
+                    jsonPath("$.data[0].cardId").value(1L),
+                    jsonPath("$.data[0].order").value(1),
+                    jsonPath("$.data[0].modifiedAt").exists(),
+                    jsonPath("$.data[0].color").value("blue"),
+                    jsonPath("$.data[0].name").value("test"),
+                    jsonPath("$.data[0].description").value("test description"),
+                    jsonPath("$.data[0].deadline").exists(),
+                    jsonPath("$.data[0].workers").exists()
+                );
+        }
+    }
 }
