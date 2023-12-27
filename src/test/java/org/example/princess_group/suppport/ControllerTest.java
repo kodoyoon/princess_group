@@ -25,7 +25,8 @@ import org.springframework.test.web.servlet.MockMvc;
 @AutoConfigureMockMvc
 public class ControllerTest {
 
-    protected ObjectMapper objectMapper = new ObjectMapper();
+    @Autowired
+    protected ObjectMapper objectMapper;
     @Autowired
     protected MockMvc mockMvc;
 }
