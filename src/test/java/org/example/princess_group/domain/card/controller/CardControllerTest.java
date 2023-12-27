@@ -15,7 +15,6 @@ import org.example.princess_group.domain.card.dto.ChangeOrderRequest;
 import org.example.princess_group.domain.card.dto.ChangeOrderResponse;
 import org.example.princess_group.domain.card.dto.CreateCardRequest;
 import org.example.princess_group.domain.card.dto.CreateCardResponse;
-import org.example.princess_group.domain.card.dto.DeleteCardResponse;
 import org.example.princess_group.domain.card.dto.UpdateCardRequest;
 import org.example.princess_group.domain.card.dto.UpdateCardResponse;
 import org.example.princess_group.domain.card.service.CardService;
@@ -105,9 +104,6 @@ class CardControllerTest extends ControllerTest {
         void success() throws Exception {
             // given
             var cardId = 1L;
-            var responseBody = DeleteCardResponse.builder()
-                .cardId(cardId)
-                .build();
             // when // then
             mockMvc.perform(delete("/api/cards/{cardId}", cardId))
                 .andDo(print())
