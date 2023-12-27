@@ -2,18 +2,17 @@ package org.example.princess_group.domain.card.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.example.princess_group.domain.card.dto.UpdateCardRequest;
 import org.example.princess_group.global.entity.BaseEntity;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "CARD")
 public class Card extends BaseEntity {
 
     @Column(nullable = false)
@@ -26,7 +25,7 @@ public class Card extends BaseEntity {
     private LocalDateTime deadline;
 
     @Builder
-    public Card(Long listId, String name, String description, String color, Integer order,
+    private Card(Long listId, String name, String description, String color, Integer order,
         LocalDateTime deadline) {
         this.listId = listId;
         this.name = name;
@@ -34,5 +33,20 @@ public class Card extends BaseEntity {
         this.color = color;
         this.order = order;
         this.deadline = deadline;
+    }
+
+    public void update(UpdateCardRequest request) {
+        if (request.name() != null) {
+            this.name = request.name();
+        }
+        if (request.description() != null) {
+            this.description = request.description();
+        }
+        if (request.deadLine() != null) {
+            this.deadline = request.deadLine();
+        }
+        if (request.color() != null) {
+            this.color = request.color();
+        }
     }
 }

@@ -39,7 +39,18 @@ public class CardServiceImpl implements CardService {
     }
 
     public UpdateCardResponse updateCard(UpdateCardRequest request) {
-        return null;
+        Card card = cardRepository.findById(request.cardId())
+            .orElseThrow(() -> new ServiceException(CardErrorCode.NOT_FOUND));
+
+        card.update(request);
+
+        return UpdateCardResponse.builder()
+            .cardId(card.getId())
+            .name(card.getName())
+            .color(card.getColor())
+            .description(card.getDescription())
+            .deadline(card.getDeadline())
+            .build();
     }
 
     public void deleteCard(Long cardId) {

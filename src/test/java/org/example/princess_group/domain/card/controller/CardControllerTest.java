@@ -72,6 +72,7 @@ class CardControllerTest extends ControllerTest {
         void success() throws Exception {
             // given
             var body = new UpdateCardRequest(
+                1L,
                 "name",
                 "description",
                 "color",

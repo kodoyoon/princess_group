@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 
 @JsonInclude(Include.NON_NULL)
 public record UpdateCardRequest(
+    Long cardId,
     String name,
     String description,
     String color,
