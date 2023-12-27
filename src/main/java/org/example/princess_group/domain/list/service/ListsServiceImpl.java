@@ -1,5 +1,6 @@
 package org.example.princess_group.domain.list.service;
 
+import static org.example.princess_group.domain.board.error.BoardErrorCode.NOT_EXIST_BOARD;
 import static org.example.princess_group.domain.list.error.ListsErrorCode.NOT_EXIST_LIST;
 
 import java.util.List;
@@ -45,15 +46,27 @@ public class ListsServiceImpl implements ListsService {
         }
     }
 
-    @Transactional
+
     public CreateListsResponse createLists(Long id, CreateListsRequest request) {
         if(!boardService.boardCheck(id)){
             throw new ServiceException(NOT_EXIST_LIST);
-        };
-        Optional<Board> board = boardRepository.findById(id);
+        }
+        Board board = boardRepository.findById(id).orElseThrow(
+            () -> new ServiceException(NOT_EXIST_BOARD)
+        );
         int order =  repository.countAll();
-        Lists lists = new Lists(board.get(),request,order+1);
-        var save = repository.save(lists);
-        return CreateListsResponse.builder().id(save.getId()).name(save.getName()).boardId(board.get().getId()).build();
+        Lists lists = new Lists(board,request,order+1);
+        Lists response = repository.save(lists);
+        return CreateListsResponse.builder().id(response.getId()).name(response.getName()).boardId(response.getBoard().getId()).build();
+    }
+
+    @Override
+    @Transactional
+    public CreateListsResponse updateLists(Long id, CreateListsRequest request) {
+        Lists lists = repository.findById(id).orElseThrow(
+            () -> new ServiceException(NOT_EXIST_LIST)
+        );
+        lists.update(request);
+        return CreateListsResponse.builder().id(lists.getId()).name(lists.getName()).boardId(lists.getBoard().getId()).build();
     }
 }

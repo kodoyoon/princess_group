@@ -28,4 +28,8 @@ public class Lists extends BaseEntity {
         this.name = request.getName();
         this.order = order;
     }
+
+    public void update(CreateListsRequest request) {
+        this.name = request.getName();
+    }
 }

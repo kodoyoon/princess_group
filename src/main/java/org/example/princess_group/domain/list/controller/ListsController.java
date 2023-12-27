@@ -8,8 +8,10 @@ import org.example.princess_group.domain.list.dto.response.ReadListsResponse;
 import org.example.princess_group.domain.list.service.ListsService;
 import org.example.princess_group.global.dto.RootResponse;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.Mapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -41,6 +43,19 @@ public class ListsController {
             RootResponse.builder()
                 .status("200")
                 .msg("리스트 저장에 성공했습니다.")
+                .data(response)
+                .build()
+        );
+    }
+
+    @PatchMapping("/{listId}")
+    public ResponseEntity<?> updateLists(@PathVariable(name = "listId") Long id,
+        CreateListsRequest request) {
+        CreateListsResponse response = listsService.updateLists(id,request);
+        return ResponseEntity.ok(
+            RootResponse.builder()
+                .status("200")
+                .msg("리스트 수정에 성공했습니다.")
                 .data(response)
                 .build()
         );

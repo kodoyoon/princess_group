@@ -10,4 +10,6 @@ public interface ListsService {
     List<ReadListsResponse> getlists(Long id);
 
     CreateListsResponse createLists(Long id, CreateListsRequest request);
+
+    CreateListsResponse updateLists(Long id, CreateListsRequest request);
 }
