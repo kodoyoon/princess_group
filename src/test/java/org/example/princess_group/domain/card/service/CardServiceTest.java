@@ -6,6 +6,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 
 import java.time.LocalDateTime;
+import org.example.princess_group.domain.card.dto.AllocateWorkerRequest;
 import org.example.princess_group.domain.card.dto.CreateCardRequest;
 import org.example.princess_group.domain.card.dto.CreateCardResponse;
 import org.example.princess_group.domain.card.dto.UpdateCardRequest;
@@ -14,6 +15,7 @@ import org.example.princess_group.domain.card.entity.Card;
 import org.example.princess_group.domain.card.error.CardErrorCode;
 import org.example.princess_group.domain.card.repository.CardRepository;
 import org.example.princess_group.domain.list.service.ListService;
+import org.example.princess_group.domain.user.service.UserServiceInterface;
 import org.example.princess_group.global.error.ErrorCode;
 import org.example.princess_group.global.exception.ServiceException;
 import org.example.princess_group.suppport.RepositoryTest;
@@ -29,12 +31,13 @@ class CardServiceTest extends RepositoryTest {
     @Autowired
     CardRepository cardRepository;
     CardServiceImpl cardService;
+    UserServiceInterface userService = mock(UserServiceInterface.class);
     ListService listService = mock(ListService.class);
 
     @BeforeEach
     void init() {
         if (cardService == null) {
-            cardService = new CardServiceImpl(cardRepository, listService);
+            cardService = new CardServiceImpl(cardRepository, listService, userService);
         }
         cardRepository.deleteAllInBatch();
     }
@@ -95,9 +98,10 @@ class CardServiceTest extends RepositoryTest {
                 .name("before name")
                 .build());
 
-            var request = new UpdateCardRequest(
-                card.getId(), "change name", null, null, null
-            );
+            var request = UpdateCardRequest.builder()
+                .cardId(card.getId())
+                .name("change name")
+                .build();
             // when
             UpdateCardResponse response = cardService.updateCard(request);
             // then
@@ -114,9 +118,10 @@ class CardServiceTest extends RepositoryTest {
                 .description("before description")
                 .build());
 
-            var request = new UpdateCardRequest(
-                card.getId(), null, "change description", null, null
-            );
+            var request = UpdateCardRequest.builder()
+                .cardId(card.getId())
+                .description("change description")
+                .build();
             // when
             UpdateCardResponse response = cardService.updateCard(request);
             // then
@@ -133,9 +138,10 @@ class CardServiceTest extends RepositoryTest {
                 .color("before color")
                 .build());
 
-            var request = new UpdateCardRequest(
-                card.getId(), null, null, "change color", null
-            );
+            var request = UpdateCardRequest.builder()
+                .cardId(card.getId())
+                .color("change color")
+                .build();
             // when
             UpdateCardResponse response = cardService.updateCard(request);
             // then
@@ -152,13 +158,65 @@ class CardServiceTest extends RepositoryTest {
                 .deadline(LocalDateTime.of(2000, 1, 1, 0, 0, 0))
                 .build());
 
-            var request = new UpdateCardRequest(
-                card.getId(), null, null, null, LocalDateTime.of(2001, 1, 1, 1, 1, 1)
-            );
+            var request = UpdateCardRequest.builder()
+                .cardId(card.getId())
+                .deadLine(LocalDateTime.of(2001, 1, 1, 1, 1, 1))
+                .build();
             // when
             UpdateCardResponse response = cardService.updateCard(request);
             // then
             then(response.deadline()).isEqualTo(request.deadLine());
+        }
+
+        @DisplayName("작업자 할당 성공")
+        @Test
+        void allocate_worker_to_card_success() {
+            // given
+            var card = cardRepository.saveAndFlush(Card.builder()
+                .listId(1L)
+                .name("sample")
+                .deadline(LocalDateTime.of(2000, 1, 1, 0, 0, 0))
+                .build());
+
+            var validUserId = 10L;
+            given(userService.isValidUserId(validUserId)).willReturn(true);
+            var allocateWorkerRequest = new AllocateWorkerRequest(validUserId);
+
+            var request = UpdateCardRequest.builder()
+                .cardId(card.getId())
+                .allocateWorker(allocateWorkerRequest)
+                .build();
+            // when
+            UpdateCardResponse response = cardService.updateCard(request);
+            // then
+            then(response.newWorker().userId()).isEqualTo(validUserId);
+        }
+
+        @DisplayName("유효하지않은 사용자인 경우 작업자 할당 실패")
+        @Test
+        void when_userId_is_not_valid_then_allocate_worker_to_card_fail() {
+            // given
+            var card = cardRepository.saveAndFlush(Card.builder()
+                .listId(1L)
+                .name("sample")
+                .deadline(LocalDateTime.of(2000, 1, 1, 0, 0, 0))
+                .build());
+
+            var inValidUserId = 10L;
+            given(userService.isValidUserId(inValidUserId)).willReturn(false);
+            var allocateWorkerRequest = new AllocateWorkerRequest(inValidUserId);
+
+            var request = UpdateCardRequest.builder()
+                .cardId(card.getId())
+                .allocateWorker(allocateWorkerRequest)
+                .build();
+            // when // then
+            thenThrownBy(() -> cardService.updateCard(request))
+                .isInstanceOf(ServiceException.class)
+                .satisfies(ex -> {
+                    ErrorCode errorCode = ((ServiceException) ex).getErrorCode();
+                    then(errorCode).isEqualTo(CardErrorCode.NOT_VALID_USER);
+                });
         }
     }
 }

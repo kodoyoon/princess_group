@@ -71,13 +71,14 @@ class CardControllerTest extends ControllerTest {
         @Test
         void success() throws Exception {
             // given
-            var body = new UpdateCardRequest(
-                1L,
-                "name",
-                "description",
-                "color",
-                LocalDateTime.of(2000, 1, 1, 0, 0, 0)
-            );
+            var body = UpdateCardRequest.builder()
+                .cardId(1L)
+                .name("name")
+                .description("description")
+                .color("color")
+                .deadLine(LocalDateTime.of(2000, 1, 1, 0, 0, 0))
+                .build();
+
             var responseBody = UpdateCardResponse.builder()
                 .cardId(1L)
                 .build();

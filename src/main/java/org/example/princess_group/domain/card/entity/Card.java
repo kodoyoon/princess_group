@@ -1,8 +1,13 @@
 package org.example.princess_group.domain.card.entity;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.OneToMany;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -23,6 +28,9 @@ public class Card extends BaseEntity {
     @Column(name = "orders")
     private Integer order;
     private LocalDateTime deadline;
+
+    @OneToMany(mappedBy = "card", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    private List<Worker> workers = new ArrayList<>();
 
     @Builder
     private Card(Long listId, String name, String description, String color, Integer order,
@@ -48,5 +56,9 @@ public class Card extends BaseEntity {
         if (request.color() != null) {
             this.color = request.color();
         }
+    }
+
+    public void addWorker(Worker worker) {
+        workers.add(worker);
     }
 }
