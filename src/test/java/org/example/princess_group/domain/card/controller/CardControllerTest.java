@@ -8,6 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.time.LocalDateTime;
 import org.example.princess_group.domain.card.dto.CreateCardRequest;
 import org.example.princess_group.domain.card.dto.CreateCardResponse;
 import org.example.princess_group.domain.card.dto.UpdateCardRequest;
@@ -62,7 +63,12 @@ class CardControllerTest extends ControllerTest {
         @Test
         void createCardApi() throws Exception {
             // given
-            var body = new UpdateCardRequest();
+            var body = new UpdateCardRequest(
+                "name",
+                "description",
+                "color",
+                LocalDateTime.of(2000, 1, 1, 0, 0, 0)
+            );
             var responseBody = UpdateCardResponse.builder()
                 .cardId(1L)
                 .build();

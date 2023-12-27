@@ -1,5 +1,15 @@
 package org.example.princess_group.domain.card.dto;
 
-public record UpdateCardRequest() {
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import java.time.LocalDateTime;
+
+@JsonInclude(Include.NON_NULL)
+public record UpdateCardRequest(
+    String name,
+    String description,
+    String color,
+    LocalDateTime deadLine
+) {
 
 }
