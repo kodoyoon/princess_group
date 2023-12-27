@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.princess_group.domain.card.dto.CreateCardRequest;
 import org.example.princess_group.domain.card.dto.CreateCardResponse;
 import org.example.princess_group.domain.card.dto.UpdateCardRequest;
+import org.example.princess_group.domain.card.dto.UpdateCardResponse;
 import org.example.princess_group.domain.card.service.CardService;
 import org.example.princess_group.global.dto.RootResponse;
 import org.springframework.http.HttpStatus;
@@ -36,7 +37,12 @@ public class CardController {
 
     @PatchMapping
     public RootResponse<?> updateCard(@RequestBody UpdateCardRequest body) {
-        return null;
+        UpdateCardResponse response = cardService.updateCard(body);
+        return RootResponse.builder()
+            .status(HttpStatus.OK.name())
+            .msg("카드 수정 성공했습니다.")
+            .data(response)
+            .build();
     }
 
     @DeleteMapping("/{cardId}")
