@@ -2,6 +2,7 @@ package org.example.princess_group.domain.list.service;
 
 import java.util.List;
 import org.example.princess_group.domain.list.dto.request.CreateListsRequest;
+import org.example.princess_group.domain.list.dto.request.OrderChangeListsRequest;
 import org.example.princess_group.domain.list.dto.response.CreateListsResponse;
 import org.example.princess_group.domain.list.dto.response.ReadListsResponse;
 
@@ -14,4 +15,6 @@ public interface ListsService {
     CreateListsResponse updateLists(Long id, CreateListsRequest request);
 
     void deleteLists(Long id);
+
+    List<ReadListsResponse> orderChangeLists(Long id, OrderChangeListsRequest request);
 }

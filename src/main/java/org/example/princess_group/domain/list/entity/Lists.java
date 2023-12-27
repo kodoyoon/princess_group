@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.example.princess_group.domain.board.entity.Board;
 import org.example.princess_group.domain.list.dto.request.CreateListsRequest;
+import org.example.princess_group.domain.list.dto.request.OrderChangeListsRequest;
 import org.example.princess_group.global.entity.BaseEntity;
 
 @Entity
@@ -39,5 +40,9 @@ public class Lists extends BaseEntity {
 
     public void updateOrderChange() {
         this.order = order++;
+    }
+
+    public void updateOrder(OrderChangeListsRequest request) {
+        this.order = request.number();
     }
 }
