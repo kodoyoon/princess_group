@@ -34,7 +34,7 @@ class CardControllerTest extends ControllerTest {
         @Test
         void createCardApi() throws Exception {
             // given
-            var body = new CreateCardRequest();
+            var body = new CreateCardRequest("test");
             var responseBody = CreateCardResponse.builder()
                 .cardId(1L)
                 .build();
