@@ -1,6 +1,8 @@
 package org.example.princess_group.domain.card.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.example.princess_group.domain.card.dto.ChangeOrderRequest;
+import org.example.princess_group.domain.card.dto.ChangeOrderResponse;
 import org.example.princess_group.domain.card.dto.CreateCardRequest;
 import org.example.princess_group.domain.card.dto.CreateCardResponse;
 import org.example.princess_group.domain.card.dto.DeleteCardResponse;
@@ -60,7 +62,15 @@ public class CardController {
     }
 
     @PostMapping("/{cardId}")
-    public RootResponse<?> changeOrder(@PathVariable("cardId") Long cardId) {
-        return null;
+    public RootResponse<?> changeOrder(
+        @PathVariable("cardId") Long cardId,
+        @RequestBody ChangeOrderRequest body
+    ) {
+        ChangeOrderResponse response = cardService.changeOrder(cardId, body);
+        return RootResponse.builder()
+            .status(HttpStatus.OK.name())
+            .msg("카드 이동 성공했습니다.")
+            .data(response)
+            .build();
     }
 }

@@ -1,6 +1,7 @@
 package org.example.princess_group.domain.card.controller;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
@@ -10,6 +11,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.time.LocalDateTime;
+import org.example.princess_group.domain.card.dto.ChangeOrderRequest;
+import org.example.princess_group.domain.card.dto.ChangeOrderResponse;
 import org.example.princess_group.domain.card.dto.CreateCardRequest;
 import org.example.princess_group.domain.card.dto.CreateCardResponse;
 import org.example.princess_group.domain.card.dto.DeleteCardResponse;
@@ -33,6 +36,7 @@ class CardControllerTest extends ControllerTest {
     @DisplayName("카드 생성 API")
     @Nested
     class CreateCard {
+
         @DisplayName("성공 201")
         @Test
         void success() throws Exception {
@@ -60,7 +64,8 @@ class CardControllerTest extends ControllerTest {
 
     @DisplayName("카드 수정 API")
     @Nested
-    class UpdateCard{
+    class UpdateCard {
+
         @DisplayName("성공 200")
         @Test
         void success() throws Exception {
@@ -93,7 +98,8 @@ class CardControllerTest extends ControllerTest {
 
     @DisplayName("카드 삭제 API")
     @Nested
-    class DeleteCard{
+    class DeleteCard {
+
         @DisplayName("성공 200")
         @Test
         void success() throws Exception {
@@ -103,16 +109,45 @@ class CardControllerTest extends ControllerTest {
                 .cardId(cardId)
                 .build();
             // when // then
-            mockMvc.perform(delete("/api/cards/{cardId}", cardId)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString(responseBody))
-                )
+            mockMvc.perform(delete("/api/cards/{cardId}", cardId))
                 .andDo(print())
                 .andExpectAll(
                     status().isOk(),
                     jsonPath("$.status").value(HttpStatus.OK.name()),
                     jsonPath("$.msg").value("카드 삭제 성공했습니다."),
                     jsonPath("$.data.cardId").value(1L)
+                );
+        }
+    }
+
+    @DisplayName("카드 순서 변경 API")
+    @Nested
+    class ChangeOrder {
+
+        @DisplayName("성공 200")
+        @Test
+        void success() throws Exception {
+            // given
+            var cardId = 1L;
+            var number = 2;
+            var requestBody = new ChangeOrderRequest(number);
+            var responseBody = ChangeOrderResponse.builder()
+                .cardId(cardId)
+                .number(number)
+                .build();
+            given(cardService.changeOrder(eq(cardId), any())).willReturn(responseBody);
+            // when // then
+            mockMvc.perform(post("/api/cards/{cardId}", cardId)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(requestBody))
+                )
+                .andDo(print())
+                .andExpectAll(
+                    status().isOk(),
+                    jsonPath("$.status").value(HttpStatus.OK.name()),
+                    jsonPath("$.msg").value("카드 이동 성공했습니다."),
+                    jsonPath("$.data.cardId").value(1L),
+                    jsonPath("$.data.number").value(number)
                 );
         }
     }
