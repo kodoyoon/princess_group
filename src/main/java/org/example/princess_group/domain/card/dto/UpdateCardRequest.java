@@ -13,7 +13,8 @@ public record UpdateCardRequest(
     String description,
     String color,
     LocalDateTime deadLine,
-    AllocateWorkerRequest allocateWorker
+    AllocateWorkerRequest allocateWorker,
+    DeleteWorkerRequest deleteWorker
 ) {
 
 }

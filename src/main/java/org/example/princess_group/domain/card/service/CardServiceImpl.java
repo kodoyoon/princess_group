@@ -7,6 +7,8 @@ import org.example.princess_group.domain.card.dto.ChangeOrderRequest;
 import org.example.princess_group.domain.card.dto.ChangeOrderResponse;
 import org.example.princess_group.domain.card.dto.CreateCardRequest;
 import org.example.princess_group.domain.card.dto.CreateCardResponse;
+import org.example.princess_group.domain.card.dto.DeleteWorkerRequest;
+import org.example.princess_group.domain.card.dto.DeleteWorkerResponse;
 import org.example.princess_group.domain.card.dto.UpdateCardRequest;
 import org.example.princess_group.domain.card.dto.UpdateCardResponse;
 import org.example.princess_group.domain.card.entity.Card;
@@ -55,10 +57,13 @@ public class CardServiceImpl implements CardService {
             .orElseThrow(() -> new ServiceException(CardErrorCode.NOT_FOUND));
 
         card.update(request);
+
         AllocatedWorkerResponse newWorker = allocateWorker(card, request.allocateWorker());
+        DeleteWorkerResponse deleteWorkerResponse = deleteWorker(card, request.deleteWorker());
 
         return UpdateCardResponse.builder()
             .newWorker(newWorker)
+            .removeWorker(deleteWorkerResponse)
             .cardId(card.getId())
             .name(request.name())
             .color(request.color())
@@ -67,15 +72,33 @@ public class CardServiceImpl implements CardService {
             .build();
     }
 
+    private DeleteWorkerResponse deleteWorker(Card card, DeleteWorkerRequest request) {
+
+        // validation
+        if (request == null) {
+            return null;
+        }
+
+        Long userId = request.userId();
+        validateUserId(userId);
+
+        // logic
+        card.removeWorker(userId);
+
+        return DeleteWorkerResponse.builder()
+            .userId(userId)
+            .build();
+    }
+
     private AllocatedWorkerResponse allocateWorker(Card card, AllocateWorkerRequest request) {
 
         // validation
-        if(request == null) return null;
-
-        boolean isValidUserId = userService.isValidUserId(request.userId());
-        if(!isValidUserId){
-            throw new ServiceException(CardErrorCode.NOT_VALID_USER);
+        if (request == null) {
+            return null;
         }
+
+        Long userId = request.userId();
+        validateUserId(userId);
 
         // logic
         Worker worker = Worker.builder()
@@ -88,6 +111,12 @@ public class CardServiceImpl implements CardService {
         return AllocatedWorkerResponse.builder()
             .userId(worker.getUserId())
             .build();
+    }
+
+    private void validateUserId(Long userId) {
+        if (!userService.isValidUserId(userId)) {
+            throw new ServiceException(CardErrorCode.NOT_VALID_USER);
+        }
     }
 
     public void deleteCard(Long cardId) {

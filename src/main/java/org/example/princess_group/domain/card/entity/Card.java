@@ -29,7 +29,7 @@ public class Card extends BaseEntity {
     private Integer order;
     private LocalDateTime deadline;
 
-    @OneToMany(mappedBy = "card", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "card", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Worker> workers = new ArrayList<>();
 
     @Builder
@@ -60,5 +60,9 @@ public class Card extends BaseEntity {
 
     public void addWorker(Worker worker) {
         workers.add(worker);
+    }
+
+    public void removeWorker(Long userId) {
+        workers.removeIf(worker -> worker.getId().equals(userId));
     }
 }

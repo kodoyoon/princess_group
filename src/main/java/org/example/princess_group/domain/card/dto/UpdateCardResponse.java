@@ -13,7 +13,8 @@ public record UpdateCardResponse(
     String description,
     String color,
     LocalDateTime deadline,
-    AllocatedWorkerResponse newWorker
+    AllocatedWorkerResponse newWorker,
+    DeleteWorkerResponse removeWorker
 ) {
 
 }
