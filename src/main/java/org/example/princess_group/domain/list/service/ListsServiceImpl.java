@@ -16,6 +16,7 @@ import org.example.princess_group.domain.list.dto.response.ReadListsResponse;
 import org.example.princess_group.domain.list.entity.Lists;
 import org.example.princess_group.domain.list.repository.ListsRepository;
 import org.example.princess_group.global.exception.ServiceException;
+import org.modelmapper.internal.bytebuddy.asm.Advice.OffsetMapping.Target.ForField.ReadOnly;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,7 +27,7 @@ public class ListsServiceImpl implements ListsService {
     private final ListsRepository repository;
     private final BoardService boardService;
     private final BoardRepository boardRepository;
-
+    @Override
     public List<ReadListsResponse> getlists(Long id) {
 
         if(!boardService.boardCheck(id)){
@@ -45,8 +46,8 @@ public class ListsServiceImpl implements ListsService {
                 l.getOrder())).collect(Collectors.toList());
         }
     }
-
-
+    @Override
+    @Transactional(readOnly = true)
     public CreateListsResponse createLists(Long id, CreateListsRequest request) {
         if(!boardService.boardCheck(id)){
             throw new ServiceException(NOT_EXIST_LIST);
@@ -54,10 +55,14 @@ public class ListsServiceImpl implements ListsService {
         Board board = boardRepository.findById(id).orElseThrow(
             () -> new ServiceException(NOT_EXIST_BOARD)
         );
-        int order =  repository.countAll();
-        Lists lists = new Lists(board,request,order+1);
+        long order =  repository.count();
+        Lists lists = new Lists(board,request,(int)(order + 1));
         Lists response = repository.save(lists);
-        return CreateListsResponse.builder().id(response.getId()).name(response.getName()).boardId(response.getBoard().getId()).build();
+        return CreateListsResponse.builder()
+            .id(response.getId())
+            .name(response.getName())
+            .boardId(response.getBoard().getId())
+            .build();
     }
 
     @Override
@@ -67,6 +72,28 @@ public class ListsServiceImpl implements ListsService {
             () -> new ServiceException(NOT_EXIST_LIST)
         );
         lists.update(request);
-        return CreateListsResponse.builder().id(lists.getId()).name(lists.getName()).boardId(lists.getBoard().getId()).build();
+        return CreateListsResponse.builder()
+            .id(lists.getId())
+            .name(lists.getName())
+            .boardId(lists.getBoard().getId())
+            .build();
+    }
+
+    @Override
+    @Transactional
+    public void deleteLists(Long id) {
+        Lists lists = repository.findById(id).orElseThrow(
+            () -> new ServiceException(NOT_EXIST_LIST)
+        );
+        Long order = repository.orderFind(id);
+        List<Lists> list =repository.orderChange(order);
+        if(list.isEmpty()){
+            repository.delete(lists);
+        }else{
+            for (Lists l : list){
+                l.updateOrderDelete();
+            }
+            repository.delete(lists);
+        }
     }
 }

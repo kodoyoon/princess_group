@@ -60,4 +60,15 @@ public class ListsController {
                 .build()
         );
     }
+
+    @DeleteMapping("/{listId}")
+    public ResponseEntity<?> deleteLists(@PathVariable(name = "listId") Long id) {
+        listsService.deleteLists(id);
+        return ResponseEntity.ok(
+            RootResponse.builder()
+                .status("200")
+                .msg("리스트 삭제에 성공했습니다.")
+                .build()
+        );
+    }
 }

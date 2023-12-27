@@ -12,4 +12,6 @@ public interface ListsService {
     CreateListsResponse createLists(Long id, CreateListsRequest request);
 
     CreateListsResponse updateLists(Long id, CreateListsRequest request);
+
+    void deleteLists(Long id);
 }

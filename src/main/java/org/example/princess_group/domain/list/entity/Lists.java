@@ -25,11 +25,19 @@ public class Lists extends BaseEntity {
 
     public Lists(Board board, CreateListsRequest request, int order) {
         this.board = board;
-        this.name = request.getName();
+        this.name = request.name();
         this.order = order;
     }
 
     public void update(CreateListsRequest request) {
-        this.name = request.getName();
+        this.name = request.name();
+    }
+
+    public void updateOrderDelete() {
+        this.order = order-1;
+    }
+
+    public void updateOrderChange() {
+        this.order = order++;
     }
 }
