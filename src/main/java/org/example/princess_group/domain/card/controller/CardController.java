@@ -3,6 +3,7 @@ package org.example.princess_group.domain.card.controller;
 import lombok.RequiredArgsConstructor;
 import org.example.princess_group.domain.card.dto.CreateCardRequest;
 import org.example.princess_group.domain.card.dto.CreateCardResponse;
+import org.example.princess_group.domain.card.dto.DeleteCardResponse;
 import org.example.princess_group.domain.card.dto.UpdateCardRequest;
 import org.example.princess_group.domain.card.dto.UpdateCardResponse;
 import org.example.princess_group.domain.card.service.CardService;
@@ -47,7 +48,15 @@ public class CardController {
 
     @DeleteMapping("/{cardId}")
     public RootResponse<?> deleteCard(@PathVariable("cardId") Long cardId) {
-        return null;
+        cardService.deleteCard(cardId);
+        DeleteCardResponse response = DeleteCardResponse.builder()
+            .cardId(cardId)
+            .build();
+        return RootResponse.builder()
+            .status(HttpStatus.OK.name())
+            .msg("카드 삭제 성공했습니다.")
+            .data(response)
+            .build();
     }
 
     @PostMapping("/{cardId}")

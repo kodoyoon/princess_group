@@ -2,6 +2,7 @@ package org.example.princess_group.domain.card.controller;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -11,6 +12,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.time.LocalDateTime;
 import org.example.princess_group.domain.card.dto.CreateCardRequest;
 import org.example.princess_group.domain.card.dto.CreateCardResponse;
+import org.example.princess_group.domain.card.dto.DeleteCardResponse;
 import org.example.princess_group.domain.card.dto.UpdateCardRequest;
 import org.example.princess_group.domain.card.dto.UpdateCardResponse;
 import org.example.princess_group.domain.card.service.CardService;
@@ -33,7 +35,7 @@ class CardControllerTest extends ControllerTest {
     class CreateCard {
         @DisplayName("성공 201")
         @Test
-        void createCardApi() throws Exception {
+        void success() throws Exception {
             // given
             var body = new CreateCardRequest("test");
             var responseBody = CreateCardResponse.builder()
@@ -61,7 +63,7 @@ class CardControllerTest extends ControllerTest {
     class UpdateCard{
         @DisplayName("성공 200")
         @Test
-        void createCardApi() throws Exception {
+        void success() throws Exception {
             // given
             var body = new UpdateCardRequest(
                 "name",
@@ -84,6 +86,32 @@ class CardControllerTest extends ControllerTest {
                     status().isOk(),
                     jsonPath("$.status").value(HttpStatus.OK.name()),
                     jsonPath("$.msg").value("카드 수정 성공했습니다."),
+                    jsonPath("$.data.cardId").value(1L)
+                );
+        }
+    }
+
+    @DisplayName("카드 삭제 API")
+    @Nested
+    class DeleteCard{
+        @DisplayName("성공 200")
+        @Test
+        void success() throws Exception {
+            // given
+            var cardId = 1L;
+            var responseBody = DeleteCardResponse.builder()
+                .cardId(cardId)
+                .build();
+            // when // then
+            mockMvc.perform(delete("/api/cards/{cardId}", cardId)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(responseBody))
+                )
+                .andDo(print())
+                .andExpectAll(
+                    status().isOk(),
+                    jsonPath("$.status").value(HttpStatus.OK.name()),
+                    jsonPath("$.msg").value("카드 삭제 성공했습니다."),
                     jsonPath("$.data.cardId").value(1L)
                 );
         }

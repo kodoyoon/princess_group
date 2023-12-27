@@ -1,5 +1,10 @@
 package org.example.princess_group.domain.card.dto;
 
-public record DeleteCardResponse() {
+import lombok.Builder;
+
+@Builder
+public record DeleteCardResponse(
+    Long cardId
+) {
 
 }

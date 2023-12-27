@@ -15,4 +15,8 @@ public class CardService {
     public UpdateCardResponse updateCard(UpdateCardRequest request) {
         return null;
     }
+
+    public void deleteCard(Long cardId) {
+
+    }
 }
