@@ -1,5 +1,5 @@
 package org.example.princess_group.domain.list.repository;
 
-public interface ListRepository {
+public interface ListsOrderRepository {
 
 }

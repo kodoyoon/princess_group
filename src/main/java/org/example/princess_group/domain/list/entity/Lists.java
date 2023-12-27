@@ -5,18 +5,19 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import lombok.Builder;
+import lombok.Getter;
 import org.example.princess_group.domain.board.entity.Board;
 import org.example.princess_group.global.entity.BaseEntity;
 
 @Entity
-public class List extends BaseEntity {
+@Getter
+public class Lists extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "board_id", nullable = false)
     private Board board;
     @Column(nullable = false)
     private String name;
-    @Column(nullable = false)
-    private int order;
+    @Column(name = "orders")
+    private long order;
 
 }
