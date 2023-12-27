@@ -8,7 +8,7 @@ import org.example.princess_group.domain.card.dto.CreateCardResponse;
 import org.example.princess_group.domain.card.dto.DeleteCardResponse;
 import org.example.princess_group.domain.card.dto.UpdateCardRequest;
 import org.example.princess_group.domain.card.dto.UpdateCardResponse;
-import org.example.princess_group.domain.card.service.CardService;
+import org.example.princess_group.domain.card.service.CardServiceImpl;
 import org.example.princess_group.global.dto.RootResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class CardController {
 
-    private final CardService cardService;
+    private final CardServiceImpl cardService;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)

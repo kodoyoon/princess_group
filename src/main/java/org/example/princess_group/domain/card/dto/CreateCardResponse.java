@@ -4,6 +4,7 @@ import lombok.Builder;
 
 @Builder
 public record CreateCardResponse(
-    Long cardId
+    Long cardId,
+    Long listId
 ) {
 }

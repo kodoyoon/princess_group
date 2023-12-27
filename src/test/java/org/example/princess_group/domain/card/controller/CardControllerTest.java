@@ -17,7 +17,7 @@ import org.example.princess_group.domain.card.dto.CreateCardRequest;
 import org.example.princess_group.domain.card.dto.CreateCardResponse;
 import org.example.princess_group.domain.card.dto.UpdateCardRequest;
 import org.example.princess_group.domain.card.dto.UpdateCardResponse;
-import org.example.princess_group.domain.card.service.CardService;
+import org.example.princess_group.domain.card.service.CardServiceImpl;
 import org.example.princess_group.suppport.ControllerTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -30,7 +30,7 @@ import org.springframework.http.MediaType;
 class CardControllerTest extends ControllerTest {
 
     @MockBean
-    CardService cardService;
+    CardServiceImpl cardService;
 
     @DisplayName("카드 생성 API")
     @Nested
@@ -40,9 +40,10 @@ class CardControllerTest extends ControllerTest {
         @Test
         void success() throws Exception {
             // given
-            var body = new CreateCardRequest("test");
+            var body = new CreateCardRequest("test", 2L);
             var responseBody = CreateCardResponse.builder()
                 .cardId(1L)
+                .listId(2L)
                 .build();
             given(cardService.createCard(any()))
                 .willReturn(responseBody);
@@ -56,7 +57,8 @@ class CardControllerTest extends ControllerTest {
                     status().isCreated(),
                     jsonPath("$.status").value(HttpStatus.CREATED.name()),
                     jsonPath("$.msg").value("카드 생성 성공했습니다."),
-                    jsonPath("$.data.cardId").value(1L)
+                    jsonPath("$.data.cardId").value(1L),
+                    jsonPath("$.data.listId").value(2L)
                 );
         }
     }
