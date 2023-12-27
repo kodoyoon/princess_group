@@ -2,12 +2,16 @@ package org.example.princess_group.domain.list.controller;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.example.princess_group.domain.list.dto.request.CreateListsRequest;
+import org.example.princess_group.domain.list.dto.response.CreateListsResponse;
 import org.example.princess_group.domain.list.dto.response.ReadListsResponse;
 import org.example.princess_group.domain.list.service.ListsService;
 import org.example.princess_group.global.dto.RootResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.Mapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -17,13 +21,26 @@ import org.springframework.web.bind.annotation.RestController;
 public class ListsController {
     private final ListsService listsService;
 
-    @GetMapping("")
+    @GetMapping("/{boardId}")
     public ResponseEntity<?> getLists(@PathVariable(name = "boardId") Long id) {
         List<ReadListsResponse> response = listsService.getlists(id);
         return ResponseEntity.ok(
             RootResponse.builder()
                 .status("200")
-                .msg("성공했습니다.")
+                .msg("리스트 조회에 성공했습니다.")
+                .data(response)
+                .build()
+        );
+    }
+
+    @PostMapping("/{boardId}")
+    public ResponseEntity<?> createLists(@PathVariable(name = "boardId") Long id,
+        CreateListsRequest request) {
+        CreateListsResponse response = listsService.createLists(id,request);
+        return ResponseEntity.ok(
+            RootResponse.builder()
+                .status("200")
+                .msg("리스트 저장에 성공했습니다.")
                 .data(response)
                 .build()
         );
