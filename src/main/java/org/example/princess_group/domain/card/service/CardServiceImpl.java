@@ -15,6 +15,7 @@ import org.example.princess_group.domain.card.entity.Card;
 import org.example.princess_group.domain.card.entity.Worker;
 import org.example.princess_group.domain.card.error.CardErrorCode;
 import org.example.princess_group.domain.card.repository.CardRepository;
+import org.example.princess_group.domain.card.repository.WorkerRepository;
 import org.example.princess_group.domain.list.service.ListService;
 import org.example.princess_group.domain.user.service.UserServiceInterface;
 import org.example.princess_group.global.exception.ServiceException;
@@ -26,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class CardServiceImpl implements CardService {
 
     private final CardRepository repository;
+    private final WorkerRepository workerRepository;
     private final ListService listService;
     private final UserServiceInterface userService;
 
@@ -119,8 +121,9 @@ public class CardServiceImpl implements CardService {
         }
     }
 
+    @Transactional
     public void deleteCard(Long cardId) {
-
+        workerRepository.deleteByCardId(cardId);
     }
 
     public ChangeOrderResponse changeOrder(Long cardId, ChangeOrderRequest request) {

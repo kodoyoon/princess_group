@@ -16,6 +16,7 @@ import org.example.princess_group.domain.card.entity.Card;
 import org.example.princess_group.domain.card.entity.Worker;
 import org.example.princess_group.domain.card.error.CardErrorCode;
 import org.example.princess_group.domain.card.repository.CardRepository;
+import org.example.princess_group.domain.card.repository.WorkerRepository;
 import org.example.princess_group.domain.list.service.ListService;
 import org.example.princess_group.domain.user.service.UserServiceInterface;
 import org.example.princess_group.global.error.ErrorCode;
@@ -35,6 +36,8 @@ class CardServiceTest extends RepositoryTest {
 
     @Autowired
     CardRepository cardRepository;
+    @Autowired
+    WorkerRepository workerRepository;
     CardServiceImpl cardService;
     UserServiceInterface userService = mock(UserServiceInterface.class);
     ListService listService = mock(ListService.class);
@@ -42,7 +45,8 @@ class CardServiceTest extends RepositoryTest {
     @BeforeEach
     void init() {
         if (cardService == null) {
-            cardService = new CardServiceImpl(cardRepository, listService, userService);
+            cardService = new CardServiceImpl(cardRepository, workerRepository, listService,
+                userService);
         }
         cardRepository.deleteAllInBatch();
     }
@@ -280,6 +284,28 @@ class CardServiceTest extends RepositoryTest {
             UpdateCardResponse response = cardService.updateCard(request);
             // then
             then(response.removeWorker().userId()).isEqualTo(validUserId);
+        }
+    }
+
+    @DisplayName("카드 삭제")
+    @Nested
+    class DeleteCard {
+
+        @DisplayName("성공")
+        @Test
+        void success() {
+            // given
+            var card = cardRepository.saveAndFlush(Card.builder()
+                .listId(1L)
+                .name("sample")
+                .deadline(LocalDateTime.of(2000, 1, 1, 0, 0, 0))
+                .build());
+
+            var targetCardId = card.getId();
+            // when
+            cardService.deleteCard(targetCardId);
+            // then
+            then(workerRepository.existsById(targetCardId)).isFalse();
         }
     }
 }
