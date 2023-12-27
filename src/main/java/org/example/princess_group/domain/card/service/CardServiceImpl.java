@@ -39,15 +39,18 @@ public class CardServiceImpl implements CardService {
             throw new ServiceException(CardErrorCode.NOT_VALID_LIST);
         }
 
+        int count = repository.countByListId(request.listId()).intValue();
         // logic
         Card entity = repository.saveAndFlush(Card.builder()
             .name(request.name())
+            .order(count)
             .listId(request.listId())
             .build());
 
         return CreateCardResponse.builder()
             .cardId(entity.getId())
             .listId(entity.getListId())
+            .order(entity.getOrder())
             .build();
     }
 
@@ -126,7 +129,21 @@ public class CardServiceImpl implements CardService {
         workerRepository.deleteByCardId(cardId);
     }
 
+    @Transactional
     public ChangeOrderResponse changeOrder(Long cardId, ChangeOrderRequest request) {
-        return null;
+
+        Card target = repository.findById(cardId)
+            .orElseThrow(() -> new ServiceException(CardErrorCode.NOT_FOUND));
+
+        repository.postponeOrderByListIdAndGreaterThanNumber(target.getListId(), request.number());
+
+        target = repository.findById(cardId)
+            .orElseThrow(() -> new ServiceException(CardErrorCode.NOT_FOUND));
+        target.setOrder(request.number());
+
+        return ChangeOrderResponse.builder()
+            .number(target.getOrder())
+            .cardId(target.getId())
+            .build();
     }
 }

@@ -7,6 +7,8 @@ import static org.mockito.Mockito.mock;
 
 import java.time.LocalDateTime;
 import org.example.princess_group.domain.card.dto.AllocateWorkerRequest;
+import org.example.princess_group.domain.card.dto.ChangeOrderRequest;
+import org.example.princess_group.domain.card.dto.ChangeOrderResponse;
 import org.example.princess_group.domain.card.dto.CreateCardRequest;
 import org.example.princess_group.domain.card.dto.CreateCardResponse;
 import org.example.princess_group.domain.card.dto.DeleteWorkerRequest;
@@ -89,6 +91,7 @@ class CardServiceTest extends RepositoryTest {
                 CreateCardResponse response = cardService.createCard(request);
                 // then
                 then(response.cardId()).isNotNull();
+                then(response.order()).isNotNull();
                 then(response.listId()).isEqualTo(request.listId());
             }
         }
@@ -306,6 +309,32 @@ class CardServiceTest extends RepositoryTest {
             cardService.deleteCard(targetCardId);
             // then
             then(workerRepository.existsById(targetCardId)).isFalse();
+        }
+    }
+
+    @DisplayName("카드 순서 변경")
+    @Nested
+    class ChangeOrderCard {
+
+        @DisplayName("성공")
+        @Test
+        void success() {
+            // given
+            var listId = 1L;
+            given(listService.isValidId(listId)).willReturn(true);
+
+            Long card1Id = cardService.createCard(new CreateCardRequest("order1", listId)).cardId();
+            Long card2Id = cardService.createCard(new CreateCardRequest("order2", listId)).cardId();
+            Long card3Id = cardService.createCard(new CreateCardRequest("order3", listId)).cardId();
+
+            var request = new ChangeOrderRequest(0);
+            // when
+            ChangeOrderResponse response = cardService.changeOrder(card3Id, request);
+            // then
+            then(response.cardId()).isEqualTo(card3Id);
+            then(response.number()).isEqualTo(0);
+            then(cardRepository.findById(card1Id).get().getOrder()).isEqualTo(1);
+            then(cardRepository.findById(card2Id).get().getOrder()).isEqualTo(2);
         }
     }
 }

@@ -65,4 +65,13 @@ public class Card extends BaseEntity {
     public void removeWorker(Long userId) {
         workers.removeIf(worker -> worker.getId().equals(userId));
     }
+
+
+    public void postponeOrder() {
+        this.order++;
+    }
+
+    public void setOrder(Integer number) {
+        this.order = number;
+    }
 }
