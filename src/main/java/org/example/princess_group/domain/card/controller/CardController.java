@@ -1,17 +1,22 @@
 package org.example.princess_group.domain.card.controller;
 
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.example.princess_group.domain.card.dto.ChangeOrderRequest;
 import org.example.princess_group.domain.card.dto.ChangeOrderResponse;
 import org.example.princess_group.domain.card.dto.CreateCardRequest;
 import org.example.princess_group.domain.card.dto.CreateCardResponse;
 import org.example.princess_group.domain.card.dto.DeleteCardResponse;
+import org.example.princess_group.domain.card.dto.ReadCardResponse;
+import org.example.princess_group.domain.card.dto.ReadCardsRequest;
 import org.example.princess_group.domain.card.dto.UpdateCardRequest;
 import org.example.princess_group.domain.card.dto.UpdateCardResponse;
 import org.example.princess_group.domain.card.service.CardServiceImpl;
 import org.example.princess_group.global.dto.RootResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -70,6 +75,26 @@ public class CardController {
         return RootResponse.builder()
             .status(HttpStatus.OK.name())
             .msg("카드 이동 성공했습니다.")
+            .data(response)
+            .build();
+    }
+
+    @GetMapping("/{cardId}")
+    public RootResponse<?> getCard(@PathVariable("cardId") Long cardId) {
+        ReadCardResponse response = cardService.readCard(cardId);
+        return RootResponse.builder()
+            .status(HttpStatus.OK.name())
+            .msg("카드 상세 조회 성공했습니다.")
+            .data(response)
+            .build();
+    }
+
+    @GetMapping
+    public RootResponse<?> getCards(@ModelAttribute ReadCardsRequest request) {
+        List<ReadCardResponse> response = cardService.readCards(request);
+        return RootResponse.builder()
+            .status(HttpStatus.OK.name())
+            .msg("카드 목록 조회 성공했습니다.")
             .data(response)
             .build();
     }

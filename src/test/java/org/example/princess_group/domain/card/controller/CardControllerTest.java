@@ -4,6 +4,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -11,10 +12,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import org.example.princess_group.domain.card.dto.ChangeOrderRequest;
 import org.example.princess_group.domain.card.dto.ChangeOrderResponse;
 import org.example.princess_group.domain.card.dto.CreateCardRequest;
 import org.example.princess_group.domain.card.dto.CreateCardResponse;
+import org.example.princess_group.domain.card.dto.ReadCardResponse;
 import org.example.princess_group.domain.card.dto.UpdateCardRequest;
 import org.example.princess_group.domain.card.dto.UpdateCardResponse;
 import org.example.princess_group.domain.card.service.CardServiceImpl;
@@ -148,6 +151,45 @@ class CardControllerTest extends ControllerTest {
                     jsonPath("$.msg").value("카드 이동 성공했습니다."),
                     jsonPath("$.data.cardId").value(1L),
                     jsonPath("$.data.number").value(number)
+                );
+        }
+    }
+
+    @DisplayName("카드 단건 조회 API")
+    @Nested
+    class ReadCard {
+
+        @DisplayName("성공 200")
+        @Test
+        void success() throws Exception {
+            // given
+            var cardId = 1L;
+            given(cardService.readCard(cardId))
+                .willReturn(ReadCardResponse.builder()
+                    .cardId(cardId)
+                    .order(1)
+                    .modifiedAt(LocalDateTime.now())
+                    .color("blue")
+                    .deadline(LocalDateTime.now())
+                    .name("test")
+                    .description("test description")
+                    .workers(List.of())
+                    .build());
+            // when // then
+            mockMvc.perform(get("/api/cards/{cardId}", cardId))
+                .andDo(print())
+                .andExpectAll(
+                    status().isOk(),
+                    jsonPath("$.status").value(HttpStatus.OK.name()),
+                    jsonPath("$.msg").value("카드 상세 조회 성공했습니다."),
+                    jsonPath("$.data.cardId").value(cardId),
+                    jsonPath("$.data.order").value(1),
+                    jsonPath("$.data.modifiedAt").exists(),
+                    jsonPath("$.data.color").value("blue"),
+                    jsonPath("$.data.name").value("test"),
+                    jsonPath("$.data.description").value("test description"),
+                    jsonPath("$.data.deadline").exists(),
+                    jsonPath("$.data.workers").exists()
                 );
         }
     }

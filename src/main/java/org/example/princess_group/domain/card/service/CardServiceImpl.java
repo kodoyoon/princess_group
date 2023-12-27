@@ -1,5 +1,6 @@
 package org.example.princess_group.domain.card.service;
 
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.example.princess_group.domain.card.dto.AllocateWorkerRequest;
 import org.example.princess_group.domain.card.dto.AllocatedWorkerResponse;
@@ -9,6 +10,8 @@ import org.example.princess_group.domain.card.dto.CreateCardRequest;
 import org.example.princess_group.domain.card.dto.CreateCardResponse;
 import org.example.princess_group.domain.card.dto.DeleteWorkerRequest;
 import org.example.princess_group.domain.card.dto.DeleteWorkerResponse;
+import org.example.princess_group.domain.card.dto.ReadCardResponse;
+import org.example.princess_group.domain.card.dto.ReadCardsRequest;
 import org.example.princess_group.domain.card.dto.UpdateCardRequest;
 import org.example.princess_group.domain.card.dto.UpdateCardResponse;
 import org.example.princess_group.domain.card.entity.Card;
@@ -145,5 +148,13 @@ public class CardServiceImpl implements CardService {
             .number(target.getOrder())
             .cardId(target.getId())
             .build();
+    }
+
+    public ReadCardResponse readCard(Long cardId) {
+        return null;
+    }
+
+    public List<ReadCardResponse> readCards(ReadCardsRequest request) {
+        return null;
     }
 }
