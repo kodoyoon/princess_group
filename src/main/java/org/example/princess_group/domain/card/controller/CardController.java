@@ -1,12 +1,9 @@
 package org.example.princess_group.domain.card.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.example.princess_group.domain.card.dto.ChangeOrderResponse;
 import org.example.princess_group.domain.card.dto.CreateCardRequest;
 import org.example.princess_group.domain.card.dto.CreateCardResponse;
-import org.example.princess_group.domain.card.dto.DeleteCardResponse;
 import org.example.princess_group.domain.card.dto.UpdateCardRequest;
-import org.example.princess_group.domain.card.dto.UpdateCardResponse;
 import org.example.princess_group.domain.card.service.CardService;
 import org.example.princess_group.global.dto.RootResponse;
 import org.springframework.http.HttpStatus;
@@ -25,14 +22,15 @@ import org.springframework.web.bind.annotation.RestController;
 public class CardController {
 
     private final CardService cardService;
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public RootResponse<?> createCard(@RequestBody CreateCardRequest body) {
-
+        CreateCardResponse response = cardService.createCard(body);
         return RootResponse.builder()
             .status(HttpStatus.CREATED.name())
             .msg("카드 생성 성공했습니다.")
-            .data(cardService.createCard(body))
+            .data(response)
             .build();
     }
 
