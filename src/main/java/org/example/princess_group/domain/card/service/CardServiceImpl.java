@@ -141,10 +141,16 @@ public class CardServiceImpl implements CardService {
     @Transactional
     public ChangeOrderResponse changeOrder(Long cardId, ChangeOrderRequest request) {
 
+        // validation
+        if (!repository.existsByIdAndListId(cardId, request.listId())) {
+            throw new ServiceException(CardErrorCode.NOT_FOUND);
+        }
+
+        // logic
         Card card = repository.findById(cardId)
             .orElseThrow(() -> new ServiceException(CardErrorCode.NOT_FOUND));
 
-        repository.changeOrder(card, request.number());
+        repository.changeOrder(card, request);
 
         return ChangeOrderResponse.builder()
             .number(card.getOrder())
@@ -171,19 +177,16 @@ public class CardServiceImpl implements CardService {
 
     public List<ListCardInfo> readCards(ReadCardsRequest request) {
 
-        List<ListCardInfo> info = new ArrayList<>();
+        List<ListCardInfo> result = new ArrayList<>();
 
-        Map<Long, List<ReadCardResponse>> result = repository.findByCondition(request).stream()
+        Map<Long, List<ReadCardResponse>> data = repository
+            .findByCondition(request).stream()
             .collect(groupingBy(ReadCardResponse::listId));
 
-        for (Long listId : result.keySet()) {
-            ListCardInfo row = new ListCardInfo(listId, new ArrayList<>());
-            for (ReadCardResponse response : result.get(listId)) {
-                row.cards().add(response);
-            }
-            info.add(row);
+        for (Long listId : data.keySet()) {
+            result.add(new ListCardInfo(listId, data.get(listId)));
         }
 
-        return info;
+        return result;
     }
 }
