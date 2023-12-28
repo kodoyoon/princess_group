@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ListsRepository extends JpaRepository<Lists, Long>, ListsOrderRepository {
     List<Lists> findAllByBoardId(Long boardId);
-    long count();
+    long countByBoardId(Long boardId);
 }

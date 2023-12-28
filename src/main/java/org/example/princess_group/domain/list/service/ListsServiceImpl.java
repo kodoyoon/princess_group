@@ -53,7 +53,7 @@ public class ListsServiceImpl implements ListsService {
         if (!boardService.boardCheck(id)) {
             throw new ServiceException(NOT_EXIST_LIST);
         }
-        long order = repository.count();
+        long order = repository.countByBoardId(id);
         Lists lists = Lists.builder().boardId(id).name(request.name()).order((order+1)).build();
         Lists response = repository.save(lists);
         return CreateListsResponse.builder()
