@@ -1,6 +1,5 @@
 package org.example.princess_group.domain.card.controller;
 
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.example.princess_group.domain.card.dto.ChangeOrderRequest;
 import org.example.princess_group.domain.card.dto.ChangeOrderResponse;
@@ -91,7 +90,7 @@ public class CardController {
 
     @GetMapping
     public RootResponse<?> getCards(@ModelAttribute ReadCardsRequest request) {
-        List<ReadCardResponse> response = cardService.readCards(request);
+        var response = cardService.readCards(request);
         return RootResponse.builder()
             .status(HttpStatus.OK.name())
             .msg("카드 목록 조회 성공했습니다.")

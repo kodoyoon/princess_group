@@ -1,6 +1,10 @@
 package org.example.princess_group.domain.card.service;
 
+import static java.util.stream.Collectors.groupingBy;
+
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.example.princess_group.domain.card.dto.AllocateWorkerRequest;
 import org.example.princess_group.domain.card.dto.AllocatedWorkerResponse;
@@ -10,10 +14,12 @@ import org.example.princess_group.domain.card.dto.CreateCardRequest;
 import org.example.princess_group.domain.card.dto.CreateCardResponse;
 import org.example.princess_group.domain.card.dto.DeleteWorkerRequest;
 import org.example.princess_group.domain.card.dto.DeleteWorkerResponse;
+import org.example.princess_group.domain.card.dto.ListCardInfo;
 import org.example.princess_group.domain.card.dto.ReadCardResponse;
 import org.example.princess_group.domain.card.dto.ReadCardsRequest;
 import org.example.princess_group.domain.card.dto.UpdateCardRequest;
 import org.example.princess_group.domain.card.dto.UpdateCardResponse;
+import org.example.princess_group.domain.card.dto.WorkerInfo;
 import org.example.princess_group.domain.card.entity.Card;
 import org.example.princess_group.domain.card.entity.Worker;
 import org.example.princess_group.domain.card.error.CardErrorCode;
@@ -135,26 +141,53 @@ public class CardServiceImpl implements CardService {
     @Transactional
     public ChangeOrderResponse changeOrder(Long cardId, ChangeOrderRequest request) {
 
-        Card target = repository.findById(cardId)
+        Card card = repository.findById(cardId)
             .orElseThrow(() -> new ServiceException(CardErrorCode.NOT_FOUND));
 
-        repository.postponeOrderByListIdAndGreaterThanNumber(target.getListId(), request.number());
+        repository.postponeOrderByListIdAndGreaterThanNumber(card.getListId(), request.number());
 
-        target = repository.findById(cardId)
+        card = repository.findById(cardId)
             .orElseThrow(() -> new ServiceException(CardErrorCode.NOT_FOUND));
-        target.setOrder(request.number());
+        card.setOrder(request.number());
 
         return ChangeOrderResponse.builder()
-            .number(target.getOrder())
-            .cardId(target.getId())
+            .number(card.getOrder())
+            .cardId(card.getId())
             .build();
     }
 
     public ReadCardResponse readCard(Long cardId) {
-        return null;
+        Card card = repository.findFetchById(cardId)
+            .orElseThrow(() -> new ServiceException(CardErrorCode.NOT_FOUND));
+
+        return ReadCardResponse.builder()
+            .cardId(card.getId())
+            .listId(card.getListId())
+            .workers(card.getWorkers().stream().map(WorkerInfo::of).toList())
+            .modifiedAt(card.getModifiedAt())
+            .name(card.getName())
+            .description(card.getDescription())
+            .deadline(card.getDeadline())
+            .color(card.getColor())
+            .order(card.getOrder())
+            .build();
     }
 
-    public List<ReadCardResponse> readCards(ReadCardsRequest request) {
-        return null;
+    public List<ListCardInfo> readCards(ReadCardsRequest request) {
+
+        List<ListCardInfo> info = new ArrayList<>();
+
+        Map<Long, List<ReadCardResponse>> result = repository.findByCondition(request).stream()
+            .collect(groupingBy(ReadCardResponse::listId));
+
+        for (Long listId : result.keySet()) {
+            ListCardInfo row = new ListCardInfo(listId, new ArrayList<>());
+            for (ReadCardResponse response : result.get(listId)) {
+                row.cards().add(response);
+            }
+            info.add(row);
+        }
+
+        return info;
     }
 }

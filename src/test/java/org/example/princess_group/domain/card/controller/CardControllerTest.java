@@ -17,6 +17,7 @@ import org.example.princess_group.domain.card.dto.ChangeOrderRequest;
 import org.example.princess_group.domain.card.dto.ChangeOrderResponse;
 import org.example.princess_group.domain.card.dto.CreateCardRequest;
 import org.example.princess_group.domain.card.dto.CreateCardResponse;
+import org.example.princess_group.domain.card.dto.ListCardInfo;
 import org.example.princess_group.domain.card.dto.ReadCardResponse;
 import org.example.princess_group.domain.card.dto.UpdateCardRequest;
 import org.example.princess_group.domain.card.dto.UpdateCardResponse;
@@ -204,6 +205,7 @@ class CardControllerTest extends ControllerTest {
             // given
             ReadCardResponse response = ReadCardResponse.builder()
                 .cardId(1L)
+                .listId(2L)
                 .order(1)
                 .modifiedAt(LocalDateTime.now())
                 .color("blue")
@@ -214,7 +216,7 @@ class CardControllerTest extends ControllerTest {
                 .build();
 
             given(cardService.readCards(any()))
-                .willReturn(List.of(response));
+                .willReturn(List.of(new ListCardInfo(2L, List.of(response))));
             // when // then
             mockMvc.perform(get("/api/cards"))
                 .andDo(print())
@@ -222,14 +224,15 @@ class CardControllerTest extends ControllerTest {
                     status().isOk(),
                     jsonPath("$.status").value(HttpStatus.OK.name()),
                     jsonPath("$.msg").value("카드 목록 조회 성공했습니다."),
-                    jsonPath("$.data[0].cardId").value(1L),
-                    jsonPath("$.data[0].order").value(1),
-                    jsonPath("$.data[0].modifiedAt").exists(),
-                    jsonPath("$.data[0].color").value("blue"),
-                    jsonPath("$.data[0].name").value("test"),
-                    jsonPath("$.data[0].description").value("test description"),
-                    jsonPath("$.data[0].deadline").exists(),
-                    jsonPath("$.data[0].workers").exists()
+                    jsonPath("$.data[0].listId").value(2L),
+                    jsonPath("$.data[0].cards[0].cardId").value(1L),
+                    jsonPath("$.data[0].cards[0].order").value(1),
+                    jsonPath("$.data[0].cards[0].modifiedAt").exists(),
+                    jsonPath("$.data[0].cards[0].color").value("blue"),
+                    jsonPath("$.data[0].cards[0].name").value("test"),
+                    jsonPath("$.data[0].cards[0].description").value("test description"),
+                    jsonPath("$.data[0].cards[0].deadline").exists(),
+                    jsonPath("$.data[0].cards[0].workers").exists()
                 );
         }
     }
