@@ -11,7 +11,6 @@ import java.util.List;
 import org.example.princess_group.domain.board.repository.BoardRepository;
 import org.example.princess_group.domain.board.service.BoardService;
 import org.example.princess_group.domain.list.dto.request.CreateListsRequest;
-import org.example.princess_group.domain.list.dto.response.UpdateListsResponse;
 import org.example.princess_group.domain.list.dto.response.ReadListsResponse;
 import org.example.princess_group.domain.list.entity.Lists;
 import org.example.princess_group.domain.list.repository.ListsRepository;
