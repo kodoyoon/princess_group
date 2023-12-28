@@ -6,4 +6,6 @@ import org.example.princess_group.global.entity.BaseEntity;
 @Entity
 public class Auth extends BaseEntity {
 
+
+
 }

@@ -5,7 +5,8 @@ import org.example.princess_group.domain.auth.entity.ServiceAuthority;
 
 public interface AuthService {
 
-    boolean hasAuthority(DomainType type, ServiceAuthority authority, Long domainId);
+    boolean hasAuthority(Long userId, DomainType type, ServiceAuthority authority, Long domainId);
 
-    boolean assignAuthority(DomainType type, ServiceAuthority authority, Long domainId);
+    boolean assignAuthority(Long userId, DomainType type, ServiceAuthority authority,
+        Long domainId);
 }
