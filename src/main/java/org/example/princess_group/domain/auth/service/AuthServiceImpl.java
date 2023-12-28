@@ -9,4 +9,6 @@ public class AuthServiceImpl implements AuthService {
     public boolean hasAuthority(DomainType type, ServiceAuthority authority, Long domainId) {
         return false;
     }
+
+
 }

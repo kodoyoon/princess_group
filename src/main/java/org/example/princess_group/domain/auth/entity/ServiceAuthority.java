@@ -8,6 +8,8 @@ public enum ServiceAuthority {
     DELETE_BOARD,
     // 보드 정보 수정 권한, domainId=boardId
     UPDATE_BOARD,
+    // 보드 관리자 권한(권한 부여 가능), domainId=boardId
+    ROLE_BOARD_ADMIN,
 
 
     // 리스트 생성 권한, domainId=boardId
@@ -22,6 +24,8 @@ public enum ServiceAuthority {
     DELETE_LIST,
     // 특정 보드에 존재하는 리스트 삭제 권한, domainId=boardId
     DELETE_LIST_AT_BOARD,
+    // 리스트 관리자 권한(리스트 권한 부여 가능), domainId=listId
+    ROLE_LIST_ADMIN,
 
 
     // 어떤 리스트이든지 보드에서 카드 생성 가능한 권한, domainId=boardId

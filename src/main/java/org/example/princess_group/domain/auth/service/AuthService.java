@@ -7,4 +7,5 @@ public interface AuthService {
 
     boolean hasAuthority(DomainType type, ServiceAuthority authority, Long domainId);
 
+    
 }
