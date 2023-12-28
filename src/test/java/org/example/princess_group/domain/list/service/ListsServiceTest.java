@@ -2,16 +2,16 @@ package org.example.princess_group.domain.list.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.example.princess_group.domain.board.entity.Board;
 import org.example.princess_group.domain.board.repository.BoardRepository;
 import org.example.princess_group.domain.board.service.BoardService;
 import org.example.princess_group.domain.list.dto.request.CreateListsRequest;
-import org.example.princess_group.domain.list.dto.request.OrderChangeListsRequest;
-import org.example.princess_group.domain.list.dto.response.CreateListsResponse;
+import org.example.princess_group.domain.list.dto.response.UpdateListsResponse;
 import org.example.princess_group.domain.list.dto.response.ReadListsResponse;
 import org.example.princess_group.domain.list.entity.Lists;
 import org.example.princess_group.domain.list.repository.ListsRepository;
@@ -115,6 +115,47 @@ class ListsServiceTest {
                     //"3000", "리스트가 없습니다."
                 });
         }
-
     }
+
+    @DisplayName("리스트 생성")
+    @Nested
+    class createLists{
+        @DisplayName("리스트 생성 성공")
+        @Test
+        void success(){
+            //given
+            var boardId = 1L;
+            CreateListsRequest request = new CreateListsRequest("첫번째");
+
+            given(boardService.boardCheck(boardId)).willReturn(Boolean.TRUE);
+            given(repository.countByBoardId(1L)).willReturn(0L);
+            //when
+            listsService.createLists(boardId,request);
+            //then
+            then(repository).should().save(any(Lists.class));
+        }
+
+        @DisplayName("리스트 생성 실패")
+        @Test
+        void fail_2(){
+
+            CreateListsRequest request = new CreateListsRequest("첫번째");
+            //given
+            var boardId = 1L;
+
+            given(boardService.boardCheck(boardId)).willReturn(Boolean.FALSE);
+            //when
+
+            //then
+            assertThatThrownBy(()->listsService.createLists(boardId,request))
+                .isInstanceOf(ServiceException.class)
+                .satisfies(exception->{
+                    ErrorCode errorCode =  ((ServiceException) exception).getErrorCode();
+                    assertThat(errorCode.code()).isEqualTo("3000");
+                    assertThat(errorCode.message()).isEqualTo("리스트가 없습니다.");
+                    //"3000", "리스트가 없습니다."
+                });
+        }
+    }
+
 }
