@@ -8,6 +8,7 @@ import org.example.princess_group.domain.list.dto.response.ReadListsResponse;
 
 public interface ListsService {
 
+
     List<ReadListsResponse> getlists(Long id);
 
     CreateListsResponse createLists(Long id, CreateListsRequest request);
