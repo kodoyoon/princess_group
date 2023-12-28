@@ -6,10 +6,14 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.example.princess_group.global.entity.BaseEntity;
+import org.example.princess_group.global.entity.DomainType;
+import org.example.princess_group.global.entity.ServiceAuthority;
 
 @Entity
+@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Auth extends BaseEntity {
 
