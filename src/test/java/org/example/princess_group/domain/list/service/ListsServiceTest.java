@@ -6,12 +6,15 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import org.example.princess_group.domain.board.repository.BoardRepository;
 import org.example.princess_group.domain.board.service.BoardService;
 import org.example.princess_group.domain.list.dto.request.CreateListsRequest;
 import org.example.princess_group.domain.list.dto.response.ReadListsResponse;
+import org.example.princess_group.domain.list.dto.response.UpdateListsResponse;
 import org.example.princess_group.domain.list.entity.Lists;
 import org.example.princess_group.domain.list.repository.ListsRepository;
 import org.example.princess_group.global.error.ErrorCode;
@@ -23,6 +26,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.util.ReflectionTestUtils;
 
 @ExtendWith(MockitoExtension.class)
 class ListsServiceTest {
@@ -156,5 +160,44 @@ class ListsServiceTest {
                 });
         }
     }
+    @DisplayName("리스트 업데이트")
+    @Nested
+    class updateLists{
+        @DisplayName("리스트 업데이트 성공")
+        @Test
+        void success(){
+            //given
+            Lists lists = Lists.builder().boardId(1L).name("첫번째").order(1L).build();
+            ReflectionTestUtils.setField(lists,"id",1L);
+            var boardId = 1L;
+            CreateListsRequest request = new CreateListsRequest("첫번째 수정");
 
+            given(repository.findById(1L)).willReturn(Optional.of(lists));
+            //when
+            UpdateListsResponse response = listsService.updateLists(boardId,request);
+            //then
+            assertThat(response.name()).isEqualTo(request.name());
+        }
+
+        @DisplayName("리스트 업데이트 실패")
+        @Test
+        void fail(){
+            //given
+            Lists lists = Lists.builder().boardId(1L).name("첫번째").order(1L).build();
+            ReflectionTestUtils.setField(lists,"id",1L);
+            var boardId = 1L;
+            CreateListsRequest request = new CreateListsRequest("첫번째 수정");
+            //when
+
+            //then
+            assertThatThrownBy(()->listsService.updateLists(lists.getId(),request))
+                .isInstanceOf(ServiceException.class)
+                .satisfies(exception->{
+                    ErrorCode errorCode =  ((ServiceException) exception).getErrorCode();
+                    assertThat(errorCode.code()).isEqualTo("3000");
+                    assertThat(errorCode.message()).isEqualTo("리스트가 없습니다.");
+                    //"3000", "리스트가 없습니다."
+                });
+        }
+    }
 }
