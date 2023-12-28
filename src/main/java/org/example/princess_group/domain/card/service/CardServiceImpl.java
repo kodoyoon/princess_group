@@ -144,11 +144,7 @@ public class CardServiceImpl implements CardService {
         Card card = repository.findById(cardId)
             .orElseThrow(() -> new ServiceException(CardErrorCode.NOT_FOUND));
 
-        repository.postponeOrderByListIdAndGreaterThanNumber(card.getListId(), request.number());
-
-        card = repository.findById(cardId)
-            .orElseThrow(() -> new ServiceException(CardErrorCode.NOT_FOUND));
-        card.setOrder(request.number());
+        repository.changeOrder(card, request.number());
 
         return ChangeOrderResponse.builder()
             .number(card.getOrder())
