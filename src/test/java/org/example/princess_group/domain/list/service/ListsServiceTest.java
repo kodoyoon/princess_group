@@ -200,4 +200,42 @@ class ListsServiceTest {
                 });
         }
     }
+
+    @DisplayName("리스트 삭제")
+    @Nested
+    class deleteLists{
+        @DisplayName("리스트 삭제 성공")
+        @Test
+        void success(){
+            //given
+            Lists lists = Lists.builder().boardId(1L).name("첫번째").order(1L).build();
+            ReflectionTestUtils.setField(lists,"id",1L);
+            var boardId = 1L;
+
+            given(repository.findById(1L)).willReturn(Optional.of(lists));
+            //when
+            listsService.deleteLists(boardId);
+            //then
+            then(repository).should().delete(lists);
+        }
+        @DisplayName("리스트 삭제 실패")
+        @Test
+        void fail_1(){
+            //given
+            Lists lists = Lists.builder().boardId(1L).name("첫번째").order(1L).build();
+            ReflectionTestUtils.setField(lists,"id",1L);
+            var boardId = 1L;
+            //when
+            //then
+            assertThatThrownBy(()->listsService.deleteLists(1L))
+                .isInstanceOf(ServiceException.class)
+                .satisfies(exception->{
+                    ErrorCode errorCode =  ((ServiceException) exception).getErrorCode();
+                    assertThat(errorCode.code()).isEqualTo("3000");
+                    assertThat(errorCode.message()).isEqualTo("리스트가 없습니다.");
+                    //"3000", "리스트가 없습니다."
+                });;
+        }
+    }
+
 }
