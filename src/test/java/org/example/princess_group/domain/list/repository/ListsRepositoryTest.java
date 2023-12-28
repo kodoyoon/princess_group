@@ -1,7 +1,6 @@
 package org.example.princess_group.domain.list.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;
 import org.example.princess_group.domain.list.entity.Lists;
@@ -33,6 +32,6 @@ class ListsRepositoryTest extends RepositoryTest {
         assertThat(lists.get(0).getBoardId()).isEqualTo(1L);
         assertThat(lists.get(0).getName()).isEqualTo("첫번째");
         assertThat(lists.get(0).getOrder()).isEqualTo(1L);
-    };
+    }
 
 }

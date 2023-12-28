@@ -15,8 +15,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.util.ArrayList;
 import java.util.List;
 import org.example.princess_group.domain.list.dto.request.CreateListsRequest;
-import org.example.princess_group.domain.list.dto.response.UpdateListsResponse;
 import org.example.princess_group.domain.list.dto.response.ReadListsResponse;
+import org.example.princess_group.domain.list.dto.response.UpdateListsResponse;
 import org.example.princess_group.domain.list.repository.ListsRepository;
 import org.example.princess_group.domain.list.service.ListsService;
 import org.example.princess_group.global.exception.ServiceException;
