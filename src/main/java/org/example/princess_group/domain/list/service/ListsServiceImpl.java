@@ -35,12 +35,7 @@ public class ListsServiceImpl implements ListsService {
         if (!boardService.boardCheck(id)) {
             throw new ServiceException(NOT_EXIST_LIST);
         }
-        ;
-
-        Board board = boardRepository.findById(id).orElseThrow(
-            () -> new ServiceException(NOT_EXIST_BOARD)
-        );
-        List<Lists> lists = repository.findAllByBoard(board);
+        List<Lists> lists = repository.findAllByBoardId(id);
 
         if (lists.isEmpty()) {
             throw new ServiceException(NOT_EXIST_LIST);
@@ -58,16 +53,13 @@ public class ListsServiceImpl implements ListsService {
         if (!boardService.boardCheck(id)) {
             throw new ServiceException(NOT_EXIST_LIST);
         }
-        Board board = boardRepository.findById(id).orElseThrow(
-            () -> new ServiceException(NOT_EXIST_BOARD)
-        );
         long order = repository.count();
-        Lists lists = new Lists(board, request, (int) (order + 1));
+        Lists lists = Lists.builder().boardId(id).name(request.name()).order((order+1)).build();
         Lists response = repository.save(lists);
         return CreateListsResponse.builder()
             .id(response.getId())
             .name(response.getName())
-            .boardId(response.getBoard().getId())
+            .boardId(response.getBoardId())
             .build();
     }
 
@@ -81,7 +73,7 @@ public class ListsServiceImpl implements ListsService {
         return CreateListsResponse.builder()
             .id(lists.getId())
             .name(lists.getName())
-            .boardId(lists.getBoard().getId())
+            .boardId(lists.getBoardId())
             .build();
     }
 
@@ -121,7 +113,10 @@ public class ListsServiceImpl implements ListsService {
             }
             lists.updateOrder(request);
         }
-        List<Lists> response = repository.findAllByBoard(lists.getBoard());
+        Board board = boardRepository.findById(lists.getBoardId()).orElseThrow(
+            () -> new ServiceException(NOT_EXIST_BOARD)
+        );
+        List<Lists> response = repository.findAllByBoardId(lists.getBoardId());
         return response.stream().map(l -> new ReadListsResponse(
             l.getId(),
             l.getName(),
