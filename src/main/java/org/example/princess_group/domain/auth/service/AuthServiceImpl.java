@@ -9,4 +9,9 @@ public class AuthServiceImpl implements AuthService {
     public boolean hasAuthority(DomainType type, ServiceAuthority authority, Long domainId) {
         return false;
     }
+
+    @Override
+    public boolean assignAuthority(DomainType type, ServiceAuthority authority, Long domainId) {
+        return false;
+    }
 }
