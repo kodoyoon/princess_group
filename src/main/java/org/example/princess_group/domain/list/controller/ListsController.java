@@ -4,7 +4,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.example.princess_group.domain.list.dto.request.CreateListsRequest;
 import org.example.princess_group.domain.list.dto.request.OrderChangeListsRequest;
-import org.example.princess_group.domain.list.dto.response.CreateListsResponse;
+import org.example.princess_group.domain.list.dto.response.UpdateListsResponse;
 import org.example.princess_group.domain.list.dto.response.ReadListsResponse;
 import org.example.princess_group.domain.list.service.ListsService;
 import org.example.princess_group.global.dto.RootResponse;
@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -37,22 +38,21 @@ public class ListsController {
     }
 
     @PostMapping("/{boardId}")
-    public ResponseEntity<?> createLists(@PathVariable(name = "boardId") Long id,
+    public ResponseEntity<?> createLists(@PathVariable(name = "boardId") Long id,@RequestBody
         CreateListsRequest request) {
-        CreateListsResponse response = listsService.createLists(id,request);
+        listsService.createLists(id,request);
         return ResponseEntity.ok(
             RootResponse.builder()
                 .status("200")
                 .msg("리스트 저장에 성공했습니다.")
-                .data(response)
                 .build()
         );
     }
 
     @PatchMapping("/{listId}")
-    public ResponseEntity<?> updateLists(@PathVariable(name = "listId") Long id,
+    public ResponseEntity<?> updateLists(@PathVariable(name = "listId") Long id,@RequestBody
         CreateListsRequest request) {
-        CreateListsResponse response = listsService.updateLists(id,request);
+        UpdateListsResponse response = listsService.updateLists(id,request);
         return ResponseEntity.ok(
             RootResponse.builder()
                 .status("200")
@@ -74,7 +74,7 @@ public class ListsController {
     }
 
     @PutMapping("/{listId}")
-    public ResponseEntity<?> orderChangeLists(@PathVariable(name = "listId") Long id, OrderChangeListsRequest request) {
+    public ResponseEntity<?> orderChangeLists(@PathVariable(name = "listId") Long id,@RequestBody OrderChangeListsRequest request) {
         List<ReadListsResponse> response = listsService.orderChangeLists(id,request);
         return ResponseEntity.ok(
             RootResponse.builder()

@@ -15,21 +15,23 @@ public class ListsOrderRepositoryImpl implements ListsOrderRepository {
     EntityManager entityManager;
     JPAQueryFactory jpaQueryFactory = new JPAQueryFactory(entityManager);
     @Override
-    public List<Lists> orderChangeDelete(Long number) {
+    public List<Lists> orderChangeDelete(Long boardId, Long number) {
         return jpaQueryFactory.
             select(QLists.lists).
             from(QLists.lists).
             where(
+                QLists.lists.boardId.eq(boardId),
                 QLists.lists.order.gt(number)
             ).fetch();
     }
 
     @Override
-    public List<Lists> orderChangeUpdate(Long number) {
+    public List<Lists> orderChangeUpdate(Long boardId,Long number) {
         return jpaQueryFactory.
             select(QLists.lists).
             from(QLists.lists).
             where(
+                QLists.lists.boardId.eq(boardId),
                 QLists.lists.order.goe(number)
             ).fetch();
     }
