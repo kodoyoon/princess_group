@@ -186,4 +186,10 @@ public class CardServiceImpl implements CardService {
 
         return info;
     }
+
+    public Card getCard(Long id) {
+        Card card = repository.findFetchById(id)
+                .orElseThrow(() -> new ServiceException(CardErrorCode.NOT_FOUND));
+        return card;
+    }
 }
