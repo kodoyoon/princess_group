@@ -35,3 +35,5 @@ out/
 
 ### VS Code ###
 .vscode/
+
+princess_group\src\main\resources\application.properties
