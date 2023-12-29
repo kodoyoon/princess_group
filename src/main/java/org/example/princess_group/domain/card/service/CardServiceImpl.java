@@ -136,6 +136,7 @@ public class CardServiceImpl implements CardService {
     @Transactional
     public void deleteCard(Long cardId) {
         workerRepository.deleteByCardId(cardId);
+        repository.deleteById(cardId);
     }
 
     @Transactional
