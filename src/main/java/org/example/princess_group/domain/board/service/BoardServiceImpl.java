@@ -47,7 +47,10 @@ public class BoardServiceImpl {
    findBoard.updateBackgroundcolor(updateBoardRequest.getBackgroundcolor());
    findBoard.updateContents(updateBoardRequest.getContents());
  }
-
+  @Override
+  public boolean isValidId(Long boardId) {
+    return false;
+  }
 
         @Transactional
     public void deleteBoard(Long boardId) {
