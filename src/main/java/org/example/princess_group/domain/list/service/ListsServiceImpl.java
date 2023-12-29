@@ -98,20 +98,23 @@ public class ListsServiceImpl implements ListsService {
             () -> new ServiceException(NOT_EXIST_LIST)
         );
         Long order = repository.orderFind(id);
-        List<Lists> list = repository.orderChangeUpdate(lists.getBoardId(),request.number());
         if (request.number() > order) {
             throw new ServiceException(NOT_EXIST_NUMBER);
-        } else if (list.isEmpty()) {
+        }else if(lists.getId()<request.number()){
+            List<Lists> list = repository.orderChangeUpdate(lists.getBoardId(),request.number());
+            for (Lists l : list) {
+                l.updateOrderDelete();
+            }
+            lists.updateOrder(request);
+        }else if(lists.getId().equals(request.number())){
             throw new ServiceException(LAST_ORDER);
-        } else {
+        }else{
+            List<Lists> list = repository.orderChangeUpdate(lists.getBoardId(),request.number());
             for (Lists l : list) {
                 l.updateOrderChange();
             }
             lists.updateOrder(request);
         }
-        Board board = boardRepository.findById(lists.getBoardId()).orElseThrow(
-            () -> new ServiceException(NOT_EXIST_BOARD)
-        );
         List<Lists> response = repository.findAllByBoardId(lists.getBoardId());
         return response.stream().map(l -> new ReadListsResponse(
             l.getId(),

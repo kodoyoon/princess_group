@@ -74,11 +74,11 @@ class ListsServiceTest {
         @Test
         void fail_1(){
 
-            List<Lists> list= new ArrayList<>();
+            List<Lists> lists= new ArrayList<>();
             Lists lists1 = Lists.builder().boardId(1L).name("첫번째").order(1L).build();
             Lists lists2 = Lists.builder().boardId(2L).name("두번째").order(2L).build();
-            list.add(lists1);
-            list.add(lists2);
+            lists.add(lists1);
+            lists.add(lists2);
             //given
             var boardId = 1L;
             given(boardService.boardCheck(boardId)).willReturn(Boolean.FALSE);
@@ -236,5 +236,4 @@ class ListsServiceTest {
                 });;
         }
     }
-
 }
