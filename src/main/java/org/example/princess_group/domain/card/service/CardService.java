@@ -1,5 +1,6 @@
 package org.example.princess_group.domain.card.service;
 
-public class CardService {
+public interface CardService {
+    boolean isValidId(Long listId);
 
 }

@@ -30,6 +30,14 @@ public class ListsServiceImpl implements ListsService {
     private final BoardRepository boardRepository;
 
     @Override
+    public boolean isValidId(Long listId) {
+        Lists lists = repository.findById(listId).orElseThrow(
+            () -> new ServiceException(NOT_EXIST_LIST)
+        );
+        return true;
+    }
+
+    @Override
     public List<ReadListsResponse> getlists(Long id) {
 
         if (!boardService.boardCheck(id)) {

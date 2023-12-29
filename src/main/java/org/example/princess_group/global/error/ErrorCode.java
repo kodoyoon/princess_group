@@ -7,5 +7,6 @@ import org.springframework.http.HttpStatus;
 public record ErrorCode(
     HttpStatus status,
     String code,
-    String message) {
+    String message
+) {
 }

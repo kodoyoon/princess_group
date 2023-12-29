@@ -8,6 +8,7 @@ import org.example.princess_group.domain.list.dto.response.ReadListsResponse;
 
 public interface ListsService {
 
+    boolean isValidId(Long listId);
 
     List<ReadListsResponse> getlists(Long id);
 
