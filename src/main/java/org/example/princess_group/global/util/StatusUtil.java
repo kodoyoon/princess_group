@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.example.princess_group.domain.user.dto.CreateUserRequest;
+import org.example.princess_group.domain.user.entity.User;
 import org.example.princess_group.domain.user.repository.UserRepository;
 import org.example.princess_group.domain.user.service.UserService;
 import org.example.princess_group.global.exception.ServiceException;
@@ -16,8 +17,6 @@ import org.springframework.stereotype.Component;
 public class StatusUtil {
 
     private final String LOGIN_USER = "login_user";
-    private final UserDetailsServiceImpl service;
-
 
     public CreateUserRequest getLoginUser(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
@@ -28,10 +27,9 @@ public class StatusUtil {
     }
 
 
-    public void login(CreateUserRequest data, HttpServletRequest request) {
-        UserDetailsImpl userDetails = (UserDetailsImpl) service.loadUserByUsername(data.name());
+    public void login(User user, HttpServletRequest request) {
         HttpSession session = request.getSession(true);
-        session.setAttribute(LOGIN_USER, userDetails.getUser());
+        session.setAttribute(LOGIN_USER, user);
     }
 
     public void clearSession(HttpServletRequest request) {

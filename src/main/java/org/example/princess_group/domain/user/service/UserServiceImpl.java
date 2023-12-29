@@ -44,6 +44,6 @@ public class UserServiceImpl implements UserService {
         if (!passwordEncoder.matches(request.password(),user.getPassword())){
             throw  new ServiceException(CHECK_ID_PASSWORD);
         }
-        statusUtil.login(request,req);
+        statusUtil.login(user,req);
     }
 }

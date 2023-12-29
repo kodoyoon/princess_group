@@ -36,15 +36,13 @@ public class AuthorizationFilter extends OncePerRequestFilter {
         FilterChain filterChain) throws ServletException, IOException {
 
         CreateUserRequest loginUser = statusUtil.getLoginUser(request);
-        if(loginUser == null){
-            filterChain.doFilter(request, response);
-        }else {
+
             SecurityContext context = SecurityContextHolder.createEmptyContext();
             context.setAuthentication(
                 new UsernamePasswordAuthenticationToken(loginUser, null, null));
             SecurityContextHolder.setContext(context);
             filterChain.doFilter(request, response);
-        }
+
     }
 
     @Override
