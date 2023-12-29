@@ -186,4 +186,9 @@ public class CardServiceImpl implements CardService {
 
         return info;
     }
+
+    @Override
+    public boolean isValidId(Long listId) {
+        return false;
+    }
 }
