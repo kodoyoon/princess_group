@@ -13,7 +13,7 @@ import org.example.princess_group.domain.auth.repository.AuthRepository;
 import org.example.princess_group.domain.board.service.BoardService;
 import org.example.princess_group.domain.card.service.CardService;
 import org.example.princess_group.domain.comment.service.CommentService;
-import org.example.princess_group.domain.list.service.ListService;
+import org.example.princess_group.domain.list.service.ListsService;
 import org.example.princess_group.domain.user.service.UserServiceInterface;
 import org.example.princess_group.global.dto.AuthInfo;
 import org.example.princess_group.global.entity.DomainType;
@@ -27,7 +27,7 @@ public class AuthServiceImpl implements AuthService {
 
     private final AuthRepository authRepository;
     private final CardService cardService;
-    private final ListService listService;
+    private final ListsService listService;
     private final BoardService boardService;
     private final CommentService commentService;
     private final UserServiceInterface userServiceInterface;

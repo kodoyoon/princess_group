@@ -25,7 +25,7 @@ import org.example.princess_group.domain.card.entity.Worker;
 import org.example.princess_group.domain.card.error.CardErrorCode;
 import org.example.princess_group.domain.card.repository.CardRepository;
 import org.example.princess_group.domain.card.repository.WorkerRepository;
-import org.example.princess_group.domain.list.service.ListService;
+import org.example.princess_group.domain.list.service.ListsService;
 import org.example.princess_group.domain.user.service.UserServiceInterface;
 import org.example.princess_group.global.exception.ServiceException;
 import org.springframework.stereotype.Service;
@@ -37,7 +37,7 @@ public class CardServiceImpl implements CardService {
 
     private final CardRepository repository;
     private final WorkerRepository workerRepository;
-    private final ListService listService;
+    private final ListsService listService;
     private final UserServiceInterface userService;
 
     public CreateCardResponse createCard(CreateCardRequest request) {

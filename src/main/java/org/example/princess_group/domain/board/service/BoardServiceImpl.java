@@ -1,7 +1,8 @@
 package org.example.princess_group.domain.board.service;
 
-import jakarta.persistence.criteria.Root;
+
 import jakarta.transaction.Transactional;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.example.princess_group.domain.board.dto.CreateBoardRequest;
 import org.example.princess_group.domain.board.dto.UpdateBoardRequest;
@@ -9,14 +10,11 @@ import org.example.princess_group.domain.board.entity.Board;
 import org.example.princess_group.domain.board.repository.BoardRepository;
 import org.example.princess_group.global.dto.RootResponse;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class BoardServiceImpl {
+public class BoardServiceImpl implements BoardService {
  private final BoardRepository boardRepository;
  public CreateBoardRequest createBoard(String title, String author, String backgroundcolor,String contents) {
    Board board = new Board(title, author, backgroundcolor, contents);
@@ -62,5 +60,6 @@ public class BoardServiceImpl {
    return new RootResponse(String.valueOf(HttpStatus.OK.value()), userId, "유저 등록 성공");
 
     }
+
 
 }
