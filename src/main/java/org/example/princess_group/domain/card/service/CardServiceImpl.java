@@ -143,7 +143,7 @@ public class CardServiceImpl implements CardService {
     public ChangeOrderResponse changeOrder(Long cardId, ChangeOrderRequest request) {
 
         // validation
-        if (!repository.existsByIdAndListId(cardId, request.listId())) {
+        if (!repository.existsByIdAndListId(cardId, request.targetListId())) {
             throw new ServiceException(CardErrorCode.NOT_FOUND);
         }
 

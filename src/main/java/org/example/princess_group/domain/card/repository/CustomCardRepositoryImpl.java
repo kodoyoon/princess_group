@@ -44,7 +44,7 @@ public class CustomCardRepositoryImpl implements CustomCardRepository {
 
         // logic
         em.merge(card);
-        if (card.getListId().equals(req.listId())) {
+        if (card.getListId().equals(req.targetListId())) {
             changeOrderWhenNotChangeList(card, req);
         } else {
             changeOrderWhenChangeList(card, req);
@@ -60,7 +60,7 @@ public class CustomCardRepositoryImpl implements CustomCardRepository {
      * @param req 카드의 순서 이동 정보
      */
     private void changeOrderWhenChangeList(Card card, ChangeOrderRequest req) {
-        pushCardOrderAtList(req.listId(), req.number(), Integer.MAX_VALUE);
+        pushCardOrderAtList(req.targetListId(), req.number(), Integer.MAX_VALUE);
         pullCardOrderAtList(card.getListId(), card.getOrder(), Integer.MAX_VALUE);
         card.setOrder(req.number());
     }
