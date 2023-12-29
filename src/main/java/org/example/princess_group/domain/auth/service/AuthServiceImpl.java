@@ -1,17 +1,19 @@
 package org.example.princess_group.domain.auth.service;
 
-import org.example.princess_group.domain.auth.entity.DomainType;
-import org.example.princess_group.domain.auth.entity.ServiceAuthority;
+import java.util.List;
+import org.example.princess_group.global.dto.AuthInfo;
+import org.example.princess_group.global.entity.DomainType;
+import org.example.princess_group.global.entity.ServiceAuthority;
 
 public class AuthServiceImpl implements AuthService {
 
     @Override
-    public boolean hasAuthority(Long userId, DomainType type, ServiceAuthority authority, Long domainId) {
+    public boolean assignAuthority(Long userId, DomainType type, ServiceAuthority authority, Long domainId) {
         return false;
     }
 
     @Override
-    public boolean assignAuthority(Long userId, DomainType type, ServiceAuthority authority, Long domainId) {
-        return false;
+    public List<AuthInfo> getAuthorityByUserId(Long userId) {
+        return null;
     }
 }
