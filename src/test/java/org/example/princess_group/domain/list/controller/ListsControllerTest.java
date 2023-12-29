@@ -1,6 +1,8 @@
 package org.example.princess_group.domain.list.controller;
 
+import static org.example.princess_group.domain.list.error.ListsErrorCode.LAST_ORDER;
 import static org.example.princess_group.domain.list.error.ListsErrorCode.NOT_EXIST_LIST;
+import static org.example.princess_group.domain.list.error.ListsErrorCode.NOT_EXIST_NUMBER;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
@@ -8,6 +10,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -15,6 +18,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.util.ArrayList;
 import java.util.List;
 import org.example.princess_group.domain.list.dto.request.CreateListsRequest;
+import org.example.princess_group.domain.list.dto.request.OrderChangeListsRequest;
 import org.example.princess_group.domain.list.dto.response.ReadListsResponse;
 import org.example.princess_group.domain.list.dto.response.UpdateListsResponse;
 import org.example.princess_group.domain.list.repository.ListsRepository;
@@ -221,5 +225,117 @@ class ListsControllerTest extends ControllerTest {
                     jsonPath("$.msg").value("리스트가 없습니다.")
                 );
         }
+    }
+    @Nested
+    @DisplayName("list 순서 변경")
+    class changeOrderList {
+        @DisplayName("리스트 삭제 성공")
+        @Test
+        void order_change_success() throws Exception {
+            //given
+            var response = new ReadListsResponse(1L, "첫번째", 2L);
+            var response2 = new ReadListsResponse(2L, "두번째", 1L);
+            List<ReadListsResponse> list = new ArrayList<>();
+            list.add(response);
+            list.add(response2);
+            OrderChangeListsRequest request = OrderChangeListsRequest.builder().number(1L).build();
+            given(listsService.orderChangeLists(2L,request)).willReturn(list);
+            //when
+
+            //then
+            mockMvc.perform(put("/api/lists/2")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(request))
+                )
+                .andDo(print())
+                .andExpectAll(
+                    status().isOk(),
+                    jsonPath("$.status").value("200"),
+                    jsonPath("$.msg").value("순서 변경에 성공했습니다.")
+                );
+        }
+
+
+        @DisplayName("리스트 삭제 실패1")
+        @Test
+        void order_change_fail() throws Exception {
+            //given
+            var response = new ReadListsResponse(1L, "첫번째", 2L);
+            var response2 = new ReadListsResponse(2L, "두번째", 1L);
+            List<ReadListsResponse> list = new ArrayList<>();
+            list.add(response);
+            list.add(response2);
+            OrderChangeListsRequest request = OrderChangeListsRequest.builder().number(1L).build();
+            given(listsService.orderChangeLists(2L,request)).willThrow(
+                new ServiceException(NOT_EXIST_LIST));
+            //when
+
+            //then
+            mockMvc.perform(put("/api/lists/2")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(request))
+                )
+                .andDo(print())
+                .andExpectAll(
+                    status().isBadRequest(),
+                    jsonPath("$.status").value("3000"),
+                    jsonPath("$.msg").value("리스트가 없습니다.")
+                );
+        }
+
+        @DisplayName("리스트 삭제 실패2")
+        @Test
+        void order_change_fail2() throws Exception {
+            //given
+            var response = new ReadListsResponse(1L, "첫번째", 2L);
+            var response2 = new ReadListsResponse(2L, "두번째", 1L);
+            List<ReadListsResponse> list = new ArrayList<>();
+            list.add(response);
+            list.add(response2);
+            OrderChangeListsRequest request = OrderChangeListsRequest.builder().number(1L).build();
+            given(listsService.orderChangeLists(2L,request)).willThrow(
+                new ServiceException(LAST_ORDER));
+            //when
+
+            //then
+            mockMvc.perform(put("/api/lists/2")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(request))
+                )
+                .andDo(print())
+                .andExpectAll(
+                    status().isBadRequest(),
+                    jsonPath("$.status").value("3001"),
+                    jsonPath("$.msg").value("마지막 순서 입니다.")
+                );
+        }
+
+        @DisplayName("리스트 삭제 실패2")
+        @Test
+        void order_change_fail3() throws Exception {
+            //given
+            var response = new ReadListsResponse(1L, "첫번째", 2L);
+            var response2 = new ReadListsResponse(2L, "두번째", 1L);
+            List<ReadListsResponse> list = new ArrayList<>();
+            list.add(response);
+            list.add(response2);
+            OrderChangeListsRequest request = OrderChangeListsRequest.builder().number(1L).build();
+            given(listsService.orderChangeLists(7L,request)).willThrow(
+                new ServiceException(NOT_EXIST_NUMBER));
+            //when
+
+            //then
+            mockMvc.perform(put("/api/lists/7")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(request))
+                )
+                .andDo(print())
+                .andExpectAll(
+                    status().isBadRequest(),
+                    jsonPath("$.status").value("3002"),
+                    jsonPath("$.msg").value("존재 할수 없는 순서 입니다.")
+                );
+        }
+
     }
 }
