@@ -9,4 +9,5 @@ public record ErrorCode(
     String code,
     String message
 ) {
+
 }

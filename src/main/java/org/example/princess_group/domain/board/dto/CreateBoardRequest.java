@@ -10,14 +10,14 @@ public record CreateBoardRequest(
     String contents
 ) {
 
-      public CreateBoardRequest(Board saveBoard) {
-            this(
-                saveBoard.getTitle(),
-                saveBoard.getAuthor(),
-                saveBoard.getBackgroundcolor(),
-                saveBoard.getContents()
-            );
-      }
+    public CreateBoardRequest(Board saveBoard) {
+        this(
+            saveBoard.getTitle(),
+            saveBoard.getAuthor(),
+            saveBoard.getBackgroundcolor(),
+            saveBoard.getContents()
+        );
+    }
 }
 
 

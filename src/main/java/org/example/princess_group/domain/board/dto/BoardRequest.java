@@ -4,9 +4,10 @@ import lombok.Getter;
 
 @Getter
 public class BoardRequest {
-  private String title;
-  private String author;
-  private String backgroundcolor;
-  private String contents;
+
+    private String title;
+    private String author;
+    private String backgroundcolor;
+    private String contents;
 
 }

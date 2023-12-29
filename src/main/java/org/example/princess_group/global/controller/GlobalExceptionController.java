@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 public class GlobalExceptionController {
+
     @ExceptionHandler(ServiceException.class)
     public ResponseEntity<?> handleException(ServiceException ex) {
         ErrorCode code = ex.getErrorCode();

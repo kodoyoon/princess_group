@@ -8,4 +8,5 @@ public record CreateCardResponse(
     Long listId,
     Integer order
 ) {
+
 }

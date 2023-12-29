@@ -14,7 +14,7 @@ import org.example.princess_group.domain.board.service.BoardService;
 import org.example.princess_group.domain.card.service.CardService;
 import org.example.princess_group.domain.comment.service.CommentService;
 import org.example.princess_group.domain.list.service.ListsService;
-import org.example.princess_group.domain.user.service.UserServiceInterface;
+import org.example.princess_group.domain.user.service.UserService;
 import org.example.princess_group.global.dto.AuthInfo;
 import org.example.princess_group.global.entity.DomainType;
 import org.example.princess_group.global.entity.ServiceAuthority;
@@ -30,14 +30,14 @@ public class AuthServiceImpl implements AuthService {
     private final ListsService listService;
     private final BoardService boardService;
     private final CommentService commentService;
-    private final UserServiceInterface userServiceInterface;
+    private final UserService userServiceInterface;
 
     @Override
     public boolean assignAuthority(Long userId, DomainType type, ServiceAuthority authority,
         Long domainId) {
         // validation
         // 유효한 유저가 아닌 경우
-        if(userServiceInterface.isValidUserId(userId)){
+        if (userServiceInterface.isValidUserId(userId)) {
             throw new ServiceException(AuthErrorCode.NOT_VALID_USER);
         }
         // 존재하지 않은 domainId 인경우

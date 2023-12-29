@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-public interface CardRepository extends JpaRepository<Card, Long>, CustomCardRepository{
+public interface CardRepository extends JpaRepository<Card, Long>, CustomCardRepository {
 
     @EntityGraph(attributePaths = "workers")
     Optional<Card> findFetchById(Long id);

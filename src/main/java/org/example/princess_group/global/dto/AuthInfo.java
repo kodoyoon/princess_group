@@ -22,7 +22,7 @@ public record AuthInfo(
             .build();
     }
 
-    public boolean hasAuthority(AuthInfo info){
+    public boolean hasAuthority(AuthInfo info) {
         return hasAuthority(info.userId, info.type, info.authority, info.domainId);
     }
 

@@ -27,7 +27,6 @@ public class ListsServiceImpl implements ListsService {
 
     private final ListsRepository repository;
     private final BoardService boardService;
-    private final BoardRepository boardRepository;
 
     @Override
     public boolean isValidId(Long listId) {
@@ -63,7 +62,7 @@ public class ListsServiceImpl implements ListsService {
         }
         long order = repository.countByBoardId(id);
 
-        Lists lists = Lists.builder().boardId(id).name(request.name()).order((order+1)).build();
+        Lists lists = Lists.builder().boardId(id).name(request.name()).order((order + 1)).build();
         Lists response = repository.save(lists);
     }
 
@@ -108,16 +107,16 @@ public class ListsServiceImpl implements ListsService {
         Long order = repository.orderFind(id);
         if (request.number() > order) {
             throw new ServiceException(NOT_EXIST_NUMBER);
-        }else if(lists.getId()<request.number()){
-            List<Lists> list = repository.orderChangeUpdate(lists.getBoardId(),request.number());
+        } else if (lists.getId() < request.number()) {
+            List<Lists> list = repository.orderChangeUpdate(lists.getBoardId(), request.number());
             for (Lists l : list) {
                 l.updateOrderDelete();
             }
             lists.updateOrder(request);
-        }else if(lists.getId().equals(request.number())){
+        } else if (lists.getId().equals(request.number())) {
             throw new ServiceException(LAST_ORDER);
-        }else{
-            List<Lists> list = repository.orderChangeUpdate(lists.getBoardId(),request.number());
+        } else {
+            List<Lists> list = repository.orderChangeUpdate(lists.getBoardId(), request.number());
             for (Lists l : list) {
                 l.updateOrderChange();
             }
