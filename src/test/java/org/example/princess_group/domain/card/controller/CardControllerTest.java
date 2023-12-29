@@ -133,8 +133,9 @@ class CardControllerTest extends ControllerTest {
         void success() throws Exception {
             // given
             var cardId = 1L;
+            var listId = 2L;
             var number = 2;
-            var requestBody = new ChangeOrderRequest(number);
+            var requestBody = new ChangeOrderRequest(number, listId);
             var responseBody = ChangeOrderResponse.builder()
                 .cardId(cardId)
                 .number(number)

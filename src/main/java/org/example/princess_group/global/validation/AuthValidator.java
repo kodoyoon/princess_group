@@ -13,7 +13,7 @@ public class AuthValidator {
      * @param authInfos 권한을 부여할 유저의 권한 목록
      * @param auth      부여할 권한 정보
      * @param boardId   부여할 권한과 관련된 boardId
-     * @param listId    부여할 권한과 관련된 listId, 없다면 null 입력한다.
+     * @param listId    부여할 권한과 관련된 targetListId, 없다면 null 입력한다.
      * @return 생성할 수 있는지 여부, 생성가능시 true, 불가능시 false
      */
     public boolean validate(List<AuthInfo> authInfos, AuthInfo auth, Long boardId,
