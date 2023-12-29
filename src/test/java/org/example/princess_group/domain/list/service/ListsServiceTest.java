@@ -59,7 +59,7 @@ class ListsServiceTest {
             list.add(lists2);
             //given
             var boardId = 1L;
-            given(boardService.boardCheck(boardId)).willReturn(Boolean.TRUE);
+            given(boardService.isValidId(boardId)).willReturn(Boolean.TRUE);
             given(repository.findAllByBoardId(1L)).willReturn(list);
             //when
             List<ReadListsResponse> responses = listsService.getlists(boardId);
@@ -81,7 +81,7 @@ class ListsServiceTest {
             lists.add(lists2);
             //given
             var boardId = 1L;
-            given(boardService.boardCheck(boardId)).willReturn(Boolean.FALSE);
+            given(boardService.isValidId(boardId)).willReturn(Boolean.FALSE);
             //when
 
             //then
@@ -103,7 +103,7 @@ class ListsServiceTest {
             List<Lists> list= new ArrayList<>();
             //given
             var boardId = 1L;
-            given(boardService.boardCheck(boardId)).willReturn(Boolean.TRUE);
+            given(boardService.isValidId(boardId)).willReturn(Boolean.TRUE);
             given(repository.findAllByBoardId(1L)).willReturn(list);
             //when
 
@@ -129,7 +129,7 @@ class ListsServiceTest {
             var boardId = 1L;
             CreateListsRequest request = new CreateListsRequest("첫번째");
 
-            given(boardService.boardCheck(boardId)).willReturn(Boolean.TRUE);
+            given(boardService.isValidId(boardId)).willReturn(Boolean.TRUE);
             given(repository.countByBoardId(1L)).willReturn(0L);
             //when
             listsService.createLists(boardId,request);
@@ -145,7 +145,7 @@ class ListsServiceTest {
             //given
             var boardId = 1L;
 
-            given(boardService.boardCheck(boardId)).willReturn(Boolean.FALSE);
+            given(boardService.isValidId(boardId)).willReturn(Boolean.FALSE);
             //when
 
             //then

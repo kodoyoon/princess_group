@@ -5,6 +5,7 @@ import jakarta.transaction.Transactional;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.example.princess_group.domain.board.dto.CreateBoardRequest;
+import org.example.princess_group.domain.board.dto.UpdateBoardRequest;
 import org.example.princess_group.domain.board.entity.Board;
 import org.example.princess_group.domain.board.repository.BoardRepository;
 import org.example.princess_group.global.dto.RootResponse;
@@ -36,14 +37,14 @@ public class BoardServiceImpl implements BoardService {
     return new CreateBoardRequest(board);
   }
 
-//  @Transactional
-//  public void updateBoard(Long boardId, UpdateBoardRequest updateBoardRequest) {
-//   Board findBoard = boardRepository.findById(boardId).orElseThrow(NullPointerException::new);
-//   findBoard.updateTitle(updateBoardRequest.getTitle());
-//   findBoard.updateAuthor(updateBoardRequest.getAuthor());
-//   findBoard.updateBackgroundcolor(updateBoardRequest.getBackgroundcolor());
-//   findBoard.updateContents(updateBoardRequest.getContents());
-// }
+  @Transactional
+  public void updateBoard(Long boardId, UpdateBoardRequest updateBoardRequest) {
+   Board findBoard = boardRepository.findById(boardId).orElseThrow(NullPointerException::new);
+   findBoard.updateTitle(updateBoardRequest.getTitle());
+   findBoard.updateAuthor(updateBoardRequest.getAuthor());
+   findBoard.updateBackgroundcolor(updateBoardRequest.getBackgroundcolor());
+   findBoard.updateContents(updateBoardRequest.getContents());
+ }
   @Override
   public boolean isValidId(Long boardId) {
     return false;

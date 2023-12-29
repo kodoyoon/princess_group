@@ -40,7 +40,7 @@ public class ListsServiceImpl implements ListsService {
     @Override
     public List<ReadListsResponse> getlists(Long id) {
 
-        if (!boardService.boardCheck(id)) {
+        if (!boardService.isValidId(id)) {
             throw new ServiceException(NOT_EXIST_LIST);
         }
         List<Lists> lists = repository.findAllByBoardId(id);
@@ -58,7 +58,7 @@ public class ListsServiceImpl implements ListsService {
     @Override
     @Transactional
     public void createLists(Long id, CreateListsRequest request) {
-        if (!boardService.boardCheck(id)) {
+        if (!boardService.isValidId(id)) {
             throw new ServiceException(NOT_EXIST_LIST);
         }
         long order = repository.countByBoardId(id);

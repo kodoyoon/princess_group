@@ -22,7 +22,7 @@ import org.example.princess_group.domain.card.entity.Worker;
 import org.example.princess_group.domain.card.error.CardErrorCode;
 import org.example.princess_group.domain.card.repository.CardRepository;
 import org.example.princess_group.domain.card.repository.WorkerRepository;
-import org.example.princess_group.domain.list.service.ListService;
+import org.example.princess_group.domain.list.service.ListsService;
 import org.example.princess_group.domain.user.service.UserServiceInterface;
 import org.example.princess_group.global.error.ErrorCode;
 import org.example.princess_group.global.exception.ServiceException;
@@ -45,7 +45,7 @@ class CardServiceTest extends RepositoryTest {
     WorkerRepository workerRepository;
     CardServiceImpl cardService;
     UserServiceInterface userService = mock(UserServiceInterface.class);
-    ListService listService = mock(ListService.class);
+    ListsService listService = mock(ListsService.class);
 
     @BeforeEach
     void init() {

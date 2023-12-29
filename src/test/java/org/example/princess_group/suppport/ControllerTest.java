@@ -5,7 +5,7 @@ import org.example.princess_group.domain.auth.controller.AuthController;
 import org.example.princess_group.domain.board.controller.BoardController;
 import org.example.princess_group.domain.card.controller.CardController;
 import org.example.princess_group.domain.comment.controller.CommentController;
-import org.example.princess_group.domain.list.controller.ListApiController;
+import org.example.princess_group.domain.list.controller.ListsController;
 import org.example.princess_group.domain.user.controller.UserController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -18,7 +18,7 @@ import org.springframework.test.web.servlet.MockMvc;
         AuthController.class,
         BoardController.class,
         CommentController.class,
-        ListApiController.class,
+        ListsController.class,
         UserController.class
     }
 )

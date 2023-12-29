@@ -1,11 +1,9 @@
 package org.example.princess_group.domain.board.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
 import org.example.princess_group.domain.board.dto.BoardRequest;
 import org.example.princess_group.domain.board.dto.CreateBoardRequest;
 import org.example.princess_group.domain.board.dto.UpdateBoardRequest;
-import org.example.princess_group.domain.board.entity.Board;
 import org.example.princess_group.domain.board.service.BoardServiceImpl;
 import org.example.princess_group.global.dto.RootResponse;
 import org.springframework.http.HttpStatus;
