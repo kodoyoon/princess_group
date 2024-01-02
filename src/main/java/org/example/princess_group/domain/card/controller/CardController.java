@@ -46,8 +46,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class CardController {
 
     private final CardServiceImpl cardService;
-    private final AuthValidator authValidator;
-    private final AuthService authService;
+/*    private final AuthValidator authValidator;
+    private final AuthService authService;*/
     
 
     @PostMapping
@@ -56,6 +56,7 @@ public class CardController {
         HttpServletRequest request,
         @RequestBody CreateCardRequest body
     ) {
+/*
 
         Long loginUserId = getLoginUserId(request);
 
@@ -70,6 +71,7 @@ public class CardController {
         if (!authValidator.validate(userAuths, needAuth, body.boardId(), body.listId())) {
             throw new ServiceException(CardErrorCode.NOT_HAVE_AUTH);
         }
+*/
 
         CreateCardResponse response = cardService.createCard(body);
         return RootResponse.builder()
@@ -84,7 +86,7 @@ public class CardController {
         HttpServletRequest request,
         @RequestBody UpdateCardRequest body
     ) {
-        Long loginUserId = getLoginUserId(request);
+/*        Long loginUserId = getLoginUserId(request);
 
         List<AuthInfo> userAuths = authService.getAuthorityByUserId(loginUserId);
         AuthInfo needAuth = AuthInfo.builder()
@@ -96,7 +98,7 @@ public class CardController {
 
         if (!authValidator.validate(userAuths, needAuth, body.boardId(), body.listId())) {
             throw new ServiceException(CardErrorCode.NOT_HAVE_AUTH);
-        }
+        }*/
 
         UpdateCardResponse response = cardService.updateCard(body);
         return RootResponse.builder()
@@ -113,7 +115,7 @@ public class CardController {
         @RequestParam("listId") Long listId,
         @RequestParam("boardId") Long boardId
     ) {
-        Long loginUserId = getLoginUserId(request);
+/*        Long loginUserId = getLoginUserId(request);
 
         List<AuthInfo> userAuths = authService.getAuthorityByUserId(loginUserId);
         AuthInfo needAuth = AuthInfo.builder()
@@ -125,7 +127,7 @@ public class CardController {
 
         if (!authValidator.validate(userAuths, needAuth, boardId, listId)) {
             throw new ServiceException(CardErrorCode.NOT_HAVE_AUTH);
-        }
+        }*/
 
         cardService.deleteCard(cardId);
         DeleteCardResponse response = DeleteCardResponse.builder()
@@ -144,7 +146,7 @@ public class CardController {
         @PathVariable("cardId") Long cardId,
         @RequestBody ChangeOrderRequest body
     ) {
-        Long loginUserId = getLoginUserId(request);
+/*        Long loginUserId = getLoginUserId(request);
 
         List<AuthInfo> userAuths = authService.getAuthorityByUserId(loginUserId);
         ServiceAuthority authority = null;
@@ -170,7 +172,7 @@ public class CardController {
 
         if (!authValidator.validate(userAuths, needAuth, body.boardId(), body.targetListId())) {
             throw new ServiceException(CardErrorCode.NOT_HAVE_AUTH);
-        }
+        }*/
 
         ChangeOrderResponse response = cardService.changeOrder(cardId, body);
         return RootResponse.builder()
