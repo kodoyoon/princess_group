@@ -13,6 +13,7 @@ import org.example.princess_group.global.entity.BaseEntity;
 @Getter
 @NoArgsConstructor
 public class Lists extends BaseEntity {
+
     @Column(nullable = false)
     private Long boardId;
     @Column(nullable = false)
@@ -32,7 +33,7 @@ public class Lists extends BaseEntity {
     }
 
     public void updateOrderDelete() {
-        this.order = order-1;
+        this.order = order - 1;
     }
 
     public void updateOrderChange() {

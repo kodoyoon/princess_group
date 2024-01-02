@@ -3,6 +3,7 @@ package org.example.princess_group.domain.card.controller;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
@@ -21,20 +22,42 @@ import org.example.princess_group.domain.card.dto.ListCardInfo;
 import org.example.princess_group.domain.card.dto.ReadCardResponse;
 import org.example.princess_group.domain.card.dto.UpdateCardRequest;
 import org.example.princess_group.domain.card.dto.UpdateCardResponse;
-import org.example.princess_group.domain.card.service.CardServiceImpl;
+import org.example.princess_group.domain.user.dto.CreateUserRequest;
 import org.example.princess_group.suppport.ControllerTest;
+import org.example.princess_group.suppport.MockSpringSecurityFilter;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpSession;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
 @DisplayName("카드 API : Controller Test")
 class CardControllerTest extends ControllerTest {
 
-    @MockBean
-    CardServiceImpl cardService;
+    MockHttpSession session;
+    MockHttpServletRequest  request;
+    @Autowired
+    private WebApplicationContext context;
+    @BeforeEach
+    public void setup() {
+        mockMvc = MockMvcBuilders.webAppContextSetup(context)
+            .apply(springSecurity(new MockSpringSecurityFilter()))
+            .build();
+
+        String username = "123453";
+        String password = "123453";
+        CreateUserRequest req =new CreateUserRequest(username,password);
+        session =new MockHttpSession();
+        request = new MockHttpServletRequest();
+        session.setAttribute("login_user",req);
+        given(authValidator.validate(any(),any(),any(),any())).willReturn(Boolean.TRUE);
+    }
 
     @DisplayName("카드 생성 API")
     @Nested
@@ -44,7 +67,7 @@ class CardControllerTest extends ControllerTest {
         @Test
         void success() throws Exception {
             // given
-            var body = new CreateCardRequest("test", 2L);
+            var body = new CreateCardRequest("test", 2L,1L);
             var responseBody = CreateCardResponse.builder()
                 .cardId(1L)
                 .listId(2L)
@@ -52,7 +75,7 @@ class CardControllerTest extends ControllerTest {
             given(cardService.createCard(any()))
                 .willReturn(responseBody);
             // when // then
-            mockMvc.perform(post("/api/cards")
+            mockMvc.perform(post("/api/cards").session(session)
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsBytes(body))
                 )
@@ -89,7 +112,7 @@ class CardControllerTest extends ControllerTest {
             given(cardService.updateCard(any()))
                 .willReturn(responseBody);
             // when // then
-            mockMvc.perform(patch("/api/cards")
+            mockMvc.perform(patch("/api/cards").session(session)
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsBytes(body))
                 )
@@ -113,7 +136,7 @@ class CardControllerTest extends ControllerTest {
             // given
             var cardId = 1L;
             // when // then
-            mockMvc.perform(delete("/api/cards/{cardId}", cardId))
+            mockMvc.perform(delete("/api/cards/{cardId}?listId=1&boardId=1", cardId).session(session))
                 .andDo(print())
                 .andExpectAll(
                     status().isOk(),
@@ -135,14 +158,14 @@ class CardControllerTest extends ControllerTest {
             var cardId = 1L;
             var listId = 2L;
             var number = 2;
-            var requestBody = new ChangeOrderRequest(number, listId);
+            var requestBody = new ChangeOrderRequest(number, listId,1L,2L);
             var responseBody = ChangeOrderResponse.builder()
                 .cardId(cardId)
                 .number(number)
                 .build();
             given(cardService.changeOrder(eq(cardId), any())).willReturn(responseBody);
             // when // then
-            mockMvc.perform(post("/api/cards/{cardId}", cardId)
+            mockMvc.perform(post("/api/cards/{cardId}", cardId).session(session)
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(requestBody))
                 )
@@ -178,7 +201,7 @@ class CardControllerTest extends ControllerTest {
                     .workers(List.of())
                     .build());
             // when // then
-            mockMvc.perform(get("/api/cards/{cardId}", cardId))
+            mockMvc.perform(get("/api/cards/{cardId}", cardId).session(session))
                 .andDo(print())
                 .andExpectAll(
                     status().isOk(),
@@ -219,7 +242,7 @@ class CardControllerTest extends ControllerTest {
             given(cardService.readCards(any()))
                 .willReturn(List.of(new ListCardInfo(2L, List.of(response))));
             // when // then
-            mockMvc.perform(get("/api/cards"))
+            mockMvc.perform(get("/api/cards").session(session))
                 .andDo(print())
                 .andExpectAll(
                     status().isOk(),

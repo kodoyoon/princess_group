@@ -7,4 +7,5 @@ public record ReadListsResponse(
     String name,
     Long order
 ) {
+
 }

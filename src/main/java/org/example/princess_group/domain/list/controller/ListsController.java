@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/lists")
 @RequiredArgsConstructor
 public class ListsController {
+
     private final ListsService listsService;
 
     @GetMapping("/{boardId}")
@@ -38,9 +39,9 @@ public class ListsController {
     }
 
     @PostMapping("/{boardId}")
-    public ResponseEntity<?> createLists(@PathVariable(name = "boardId") Long id,@RequestBody
-        CreateListsRequest request) {
-        listsService.createLists(id,request);
+    public ResponseEntity<?> createLists(@PathVariable(name = "boardId") Long id, @RequestBody
+    CreateListsRequest request) {
+        listsService.createLists(id, request);
         return ResponseEntity.ok(
             RootResponse.builder()
                 .status("200")
@@ -50,9 +51,9 @@ public class ListsController {
     }
 
     @PatchMapping("/{listId}")
-    public ResponseEntity<?> updateLists(@PathVariable(name = "listId") Long id,@RequestBody
-        CreateListsRequest request) {
-        UpdateListsResponse response = listsService.updateLists(id,request);
+    public ResponseEntity<?> updateLists(@PathVariable(name = "listId") Long id, @RequestBody
+    CreateListsRequest request) {
+        UpdateListsResponse response = listsService.updateLists(id, request);
         return ResponseEntity.ok(
             RootResponse.builder()
                 .status("200")
@@ -74,8 +75,9 @@ public class ListsController {
     }
 
     @PutMapping("/{listId}")
-    public ResponseEntity<?> orderChangeLists(@PathVariable(name = "listId") Long id,@RequestBody OrderChangeListsRequest request) {
-        List<ReadListsResponse> response = listsService.orderChangeLists(id,request);
+    public ResponseEntity<?> orderChangeLists(@PathVariable(name = "listId") Long id,
+        @RequestBody OrderChangeListsRequest request) {
+        List<ReadListsResponse> response = listsService.orderChangeLists(id, request);
         return ResponseEntity.ok(
             RootResponse.builder()
                 .status("200")
