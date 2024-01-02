@@ -86,7 +86,7 @@ public class ListsServiceImpl implements ListsService {
         Lists lists = repository.findById(id).orElseThrow(
             () -> new ServiceException(NOT_EXIST_LIST)
         );
-        Long order = repository.orderFind(id);
+        Long order =lists.getOrder();
         List<Lists> list = repository.orderChangeDelete(lists.getBoardId(), order);
         if (list.isEmpty()) {
             repository.delete(lists);
@@ -104,16 +104,17 @@ public class ListsServiceImpl implements ListsService {
         Lists lists = repository.findById(id).orElseThrow(
             () -> new ServiceException(NOT_EXIST_LIST)
         );
-        Long order = repository.orderFind(id);
-        if (request.number() > order) {
+        Long order =lists.getOrder();
+        Long count = repository.countByBoardId(lists.getBoardId());
+        if (request.number() > count) {
             throw new ServiceException(NOT_EXIST_NUMBER);
-        } else if (lists.getId() < request.number()) {
+        } else if (order < request.number()) {
             List<Lists> list = repository.orderChangeUpdate(lists.getBoardId(), request.number());
             for (Lists l : list) {
                 l.updateOrderDelete();
             }
             lists.updateOrder(request);
-        } else if (lists.getId().equals(request.number())) {
+        } else if (order.equals(request.number())) {
             throw new ServiceException(LAST_ORDER);
         } else {
             List<Lists> list = repository.orderChangeUpdate(lists.getBoardId(), request.number());

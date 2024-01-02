@@ -1,5 +1,6 @@
 package org.example.princess_group.domain.card.repository;
 
+import java.util.List;
 import java.util.Optional;
 import org.example.princess_group.domain.card.entity.Card;
 import org.springframework.data.jpa.repository.EntityGraph;
@@ -13,4 +14,6 @@ public interface CardRepository extends JpaRepository<Card, Long>, CustomCardRep
     Long countByListId(Long listId);
 
     boolean existsByIdAndListId(Long cardId, Long ListId);
+
+    List<Card> findByListId(Long listId);
 }

@@ -20,7 +20,7 @@ public class BoardController {
     private final BoardService boardService;
 
     @PostMapping("/api/boards")  // 보드생성
-    public CreateBoardRequest createBoard(
+    public ResponseEntity<?> createBoard(
         @RequestBody BoardRequest request
     ) {
         CreateBoardRequest respone = boardService.createBoard(
@@ -28,44 +28,77 @@ public class BoardController {
             request.getAuthor(),
             request.getBackgroundcolor(),
             request.getContents());
-        return respone;
+        return ResponseEntity.ok(
+            RootResponse.builder()
+                .status("200")
+                .msg("보드생성에 성공했습니다.")
+                .data(respone)
+                .build()
+        );
     }
 
     @GetMapping("/api/boards") // 보드 전체조회
-    public List<CreateBoardRequest> getBoards() {
+    public ResponseEntity<?> getBoards() {
         List<CreateBoardRequest> responseList = boardService.getBoards();
-        return responseList;
+        return ResponseEntity.ok(
+            RootResponse.builder()
+                .status("200")
+                .msg("보드 전체조회에 성공했습니다.")
+                .data(responseList)
+                .build()
+        );
     }
 
     @GetMapping("/api/boards/{boardId}") //보드 단건조회
-    public ResponseEntity<CreateBoardRequest> getBoard(
+    public ResponseEntity<?> getBoard(
         @PathVariable(name = "boardId") Long boardId
     ) {
         CreateBoardRequest responseList = boardService.getBoard(boardId);
-        return ResponseEntity.ok(responseList);
+        return ResponseEntity.ok(
+            RootResponse.builder()
+                .status("200")
+                .msg("보드 단건조회에 성공했습니다.")
+                .data(responseList)
+                .build()
+        );
     }
 
     @PatchMapping("/api/boards/{boardId}") // 보드수정
-    public ResponseEntity<Void> updateBoard(
+    public ResponseEntity<?>  updateBoard(
         @PathVariable(name = "boardId") Long boardId,
         @RequestBody UpdateBoardRequest request
     ) {
         boardService.updateBoard(boardId, request);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        return ResponseEntity.ok(
+            RootResponse.builder()
+                .status("200")
+                .msg("보드 수정에 성공했습니다.")
+                .build()
+        );
     }
 
     @DeleteMapping("/api/boards/{boardId}") // 보드삭제
-    public ResponseEntity<Void> deleteBoard(
+    public ResponseEntity<?> deleteBoard(
         @PathVariable(name = "boardId") Long boardId
     ) {
         boardService.deleteBoard(boardId);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        return ResponseEntity.ok(
+            RootResponse.builder()
+                .status("200")
+                .msg("보드 삭제에 성공했습니다.")
+                .build()
+        );
     }
 
     @PostMapping("/api/boards/invitation")
-    public RootResponse inviteUser(
+    public ResponseEntity<?> inviteUser(
         @RequestBody String userId
     ) {
-        return boardService.inviteUser(userId);
+        return ResponseEntity.ok(
+            RootResponse.builder()
+                .status("200")
+                .msg("보드 초대에 성공했습니다.")
+                .build()
+        );
     }
 }

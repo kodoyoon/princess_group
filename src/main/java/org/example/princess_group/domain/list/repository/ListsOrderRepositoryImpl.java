@@ -1,6 +1,7 @@
 package org.example.princess_group.domain.list.repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import jakarta.annotation.PostConstruct;
 import jakarta.persistence.EntityManager;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -10,8 +11,12 @@ import org.example.princess_group.domain.list.entity.QLists;
 @RequiredArgsConstructor
 public class ListsOrderRepositoryImpl implements ListsOrderRepository {
 
-    EntityManager entityManager;
-    JPAQueryFactory jpaQueryFactory = new JPAQueryFactory(entityManager);
+    private final EntityManager entityManager;
+    private JPAQueryFactory jpaQueryFactory;
+    @PostConstruct
+    private void init() {
+        jpaQueryFactory = new JPAQueryFactory(entityManager);
+    }
 
     @Override
     public List<Lists> orderChangeDelete(Long boardId, Long number) {
@@ -34,14 +39,4 @@ public class ListsOrderRepositoryImpl implements ListsOrderRepository {
                 QLists.lists.order.goe(number)
             ).fetch();
     }
-
-
-    @Override
-    public long orderFind(Long id) {
-        return jpaQueryFactory.
-            select(QLists.lists.order).
-            from(QLists.lists).
-            where(QLists.lists.id.eq(id)).fetch().get(0);
-    }
-
 }

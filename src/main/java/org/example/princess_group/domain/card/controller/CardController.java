@@ -202,6 +202,16 @@ public class CardController {
             .build();
     }
 
+    @GetMapping("/lists/{cardId}")
+    public RootResponse<?> getCards(@PathVariable("cardId") Long listId) {
+        var response = cardService.readCardsList(listId);
+        return RootResponse.builder()
+            .status(HttpStatus.OK.name())
+            .msg("카드 목록 조회 성공했습니다.")
+            .data(response)
+            .build();
+    }
+
     private Long getLoginUserId(HttpServletRequest request) {
         return null;
     }

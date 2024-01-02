@@ -4,6 +4,7 @@ package org.example.princess_group.domain.board.dto;
 import org.example.princess_group.domain.board.entity.Board;
 
 public record CreateBoardRequest(
+    Long boardId,
     String title,
     String author,
     String backgroundcolor,
@@ -12,6 +13,7 @@ public record CreateBoardRequest(
 
     public CreateBoardRequest(Board saveBoard) {
         this(
+            saveBoard.getId(),
             saveBoard.getTitle(),
             saveBoard.getAuthor(),
             saveBoard.getBackgroundcolor(),
