@@ -9,5 +9,4 @@ public interface ListsOrderRepository {
 
     List<Lists> orderChangeUpdate(Long boardId, Long number);
 
-    long orderFind(Long id);
 }

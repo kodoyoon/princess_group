@@ -8,5 +8,5 @@ public interface ListsRepository extends JpaRepository<Lists, Long>, ListsOrderR
 
     List<Lists> findAllByBoardId(Long boardId);
 
-    long countByBoardId(Long boardId);
+    Long countByBoardId(Long boardId);
 }

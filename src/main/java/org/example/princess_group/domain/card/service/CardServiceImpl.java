@@ -195,4 +195,8 @@ public class CardServiceImpl implements CardService {
     public boolean isValidId(Long listId) {
         return false;
     }
+
+    public List<Card> readCardsList(Long listId) {
+        return repository.findByListId(listId);
+    }
 }

@@ -23,17 +23,18 @@ public class BoardServiceImpl implements BoardService {
         String contents) {
         Board board = new Board(title, author, backgroundcolor, contents);
         Board saveBoard = boardRepository.save(board);
+        Long save = saveBoard.getId();
         String saveTitle = saveBoard.getTitle();
         String saveAuthor = saveBoard.getAuthor();
         String saveBackgroundcolor = saveBoard.getBackgroundcolor();
         String saveContents = saveBoard.getContents();
-        return new CreateBoardRequest(saveTitle, saveAuthor, saveBackgroundcolor, saveContents);
+        return new CreateBoardRequest(save,saveTitle, saveAuthor, saveBackgroundcolor, saveContents);
     }
 
     @Override
     public List<CreateBoardRequest> getBoards() {
         return boardRepository.findAll().stream().map(
-            board -> new CreateBoardRequest(board.getTitle(), board.getAuthor(),
+            board -> new CreateBoardRequest(board.getId(), board.getTitle(), board.getAuthor(),
                 board.getBackgroundcolor(), board.getContents())
         ).toList();
     }
