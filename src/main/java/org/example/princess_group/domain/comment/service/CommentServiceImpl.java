@@ -4,14 +4,9 @@ import static org.example.princess_group.domain.comment.error.CommentErrorCode.N
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.example.princess_group.domain.card.entity.Card;
 import org.example.princess_group.domain.comment.dto.request.CreateCommentRequest;
-import org.example.princess_group.domain.comment.dto.request.UpdateCommentRequest;
 import org.example.princess_group.domain.comment.entity.Comment;
 import org.example.princess_group.domain.comment.repository.CommentRepository;
-import org.example.princess_group.domain.list.dto.request.CreateListsRequest;
-import org.example.princess_group.domain.list.dto.response.ReadListsResponse;
-import org.example.princess_group.domain.list.dto.response.UpdateListsResponse;
 import org.example.princess_group.global.exception.ServiceException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,7 +33,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional
-    public void updateComments(Long id, UpdateCommentRequest request) {
+    public void updateComments(Long id, CreateCommentRequest request) {
         Comment comment = repository.findById(id).orElseThrow(() -> new ServiceException(NOT_EXIST_COMMENT));
         comment.update(request.details());
     }

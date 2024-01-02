@@ -3,12 +3,8 @@ package org.example.princess_group.domain.comment.controller;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.example.princess_group.domain.comment.dto.request.CreateCommentRequest;
-import org.example.princess_group.domain.comment.dto.request.UpdateCommentRequest;
 import org.example.princess_group.domain.comment.entity.Comment;
 import org.example.princess_group.domain.comment.service.CommentService;
-import org.example.princess_group.domain.list.dto.request.CreateListsRequest;
-import org.example.princess_group.domain.list.dto.response.ReadListsResponse;
-import org.example.princess_group.domain.list.dto.response.UpdateListsResponse;
 import org.example.princess_group.global.dto.RootResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -27,7 +23,7 @@ public class CommentController {
     private final CommentService commentService;
 
     @GetMapping("/{cardId}")
-    public ResponseEntity<?> getLists(@PathVariable(name = "cardId") Long id) {
+    public ResponseEntity<?> getComments(@PathVariable(name = "cardId") Long id) {
         List<Comment> response = commentService.getComments(id);
         return ResponseEntity.ok(
             RootResponse.builder()
@@ -39,7 +35,7 @@ public class CommentController {
     }
 
     @PostMapping("/{cardId}")
-    public ResponseEntity<?> createLists(@PathVariable(name = "cardId") Long id, @RequestBody
+    public ResponseEntity<?> createComments(@PathVariable(name = "cardId") Long id, @RequestBody
     CreateCommentRequest request) {
         commentService.createComments(id, request);
         return ResponseEntity.ok(
@@ -51,8 +47,8 @@ public class CommentController {
     }
 
     @PatchMapping("/{commentId}")
-    public ResponseEntity<?> updateLists(@PathVariable(name = "commentId") Long id, @RequestBody
-    UpdateCommentRequest request) {
+    public ResponseEntity<?> updateComments(@PathVariable(name = "commentId") Long id, @RequestBody
+    CreateCommentRequest request) {
         commentService.updateComments(id, request);
         return ResponseEntity.ok(
             RootResponse.builder()
@@ -64,7 +60,7 @@ public class CommentController {
     }
 
     @DeleteMapping("/{commentId}")
-    public ResponseEntity<?> deleteLists(@PathVariable(name = "commentId") Long id) {
+    public ResponseEntity<?> deleteComments(@PathVariable(name = "commentId") Long id) {
         commentService.deleteComments(id);
         return ResponseEntity.ok(
             RootResponse.builder()

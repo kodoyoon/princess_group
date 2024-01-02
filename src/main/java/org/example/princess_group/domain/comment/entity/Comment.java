@@ -1,10 +1,15 @@
 package org.example.princess_group.domain.comment.entity;
 
 import jakarta.persistence.Entity;
+import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.example.princess_group.global.entity.BaseEntity;
 
 @Entity
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Comment extends BaseEntity {
 
     private Long cardId;
