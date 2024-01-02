@@ -10,4 +10,6 @@ public interface UserService {
     boolean isValidUserId(Long userId);
     void createUser(CreateUserRequest request);
     void loginUser(CreateUserRequest request, HttpServletRequest req );
+
+    void clearSession(HttpServletRequest req);
 }

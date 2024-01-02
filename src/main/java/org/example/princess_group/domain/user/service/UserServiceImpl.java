@@ -4,7 +4,6 @@ import static org.example.princess_group.domain.user.error.UserErrorCode.CHECK_I
 import static org.example.princess_group.domain.user.error.UserErrorCode.CHECK_USER;
 
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.example.princess_group.domain.user.dto.CreateUserRequest;
 import org.example.princess_group.domain.user.entity.User;
@@ -44,6 +43,11 @@ public class UserServiceImpl implements UserService {
         if (!passwordEncoder.matches(request.password(),user.getPassword())){
             throw  new ServiceException(CHECK_ID_PASSWORD);
         }
-        statusUtil.login(user,req);
+        statusUtil.login(request,req);
+    }
+
+    @Override
+    public void clearSession(HttpServletRequest req) {
+        statusUtil.clearSession(req);
     }
 }

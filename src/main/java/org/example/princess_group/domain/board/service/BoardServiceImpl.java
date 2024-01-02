@@ -18,6 +18,7 @@ public class BoardServiceImpl implements BoardService {
 
     private final BoardRepository boardRepository;
 
+    @Override
     public CreateBoardRequest createBoard(String title, String author, String backgroundcolor,
         String contents) {
         Board board = new Board(title, author, backgroundcolor, contents);
@@ -29,6 +30,7 @@ public class BoardServiceImpl implements BoardService {
         return new CreateBoardRequest(saveTitle, saveAuthor, saveBackgroundcolor, saveContents);
     }
 
+    @Override
     public List<CreateBoardRequest> getBoards() {
         return boardRepository.findAll().stream().map(
             board -> new CreateBoardRequest(board.getTitle(), board.getAuthor(),
@@ -36,11 +38,12 @@ public class BoardServiceImpl implements BoardService {
         ).toList();
     }
 
+    @Override
     public CreateBoardRequest getBoard(Long boardId) {
         Board board = boardRepository.findById(boardId).orElseThrow(NullPointerException::new);
         return new CreateBoardRequest(board);
     }
-
+    @Override
     @Transactional
     public void updateBoard(Long boardId, UpdateBoardRequest updateBoardRequest) {
         Board findBoard = boardRepository.findById(boardId).orElseThrow(NullPointerException::new);
@@ -50,18 +53,19 @@ public class BoardServiceImpl implements BoardService {
         findBoard.updateContents(updateBoardRequest.getContents());
     }
 
+
     @Override
     public boolean isValidId(Long boardId) {
         Board findBoard = boardRepository.findById(boardId).orElseThrow(NullPointerException::new);
         return true;
     }
-
+    @Override
     @Transactional
     public void deleteBoard(Long boardId) {
         Board findBoard = boardRepository.findById(boardId).orElseThrow(NullPointerException::new);
         boardRepository.delete(findBoard);
     }
-
+    @Override
     public RootResponse inviteUser(String userId) {
         return new RootResponse(String.valueOf(HttpStatus.OK.value()), userId, "유저 등록 성공");
 

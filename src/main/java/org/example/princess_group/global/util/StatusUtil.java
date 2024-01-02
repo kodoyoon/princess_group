@@ -27,14 +27,21 @@ public class StatusUtil {
     }
 
 
-    public void login(User user, HttpServletRequest request) {
-        HttpSession session = request.getSession(true);
-        session.setAttribute(LOGIN_USER, user);
+    public void login(CreateUserRequest user, HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if (session == null) {
+            HttpSession sessionSet = request.getSession(true);
+            sessionSet.setAttribute(LOGIN_USER, user);
+        }else{
+            session.setAttribute(LOGIN_USER, user);
+        }
+
     }
 
     public void clearSession(HttpServletRequest request) {
         HttpSession session = request.getSession(true);
-        session.setMaxInactiveInterval(0);
+        session.removeAttribute(LOGIN_USER);
+        session.invalidate();
     }
 
     public boolean isLogin(HttpServletRequest request) {

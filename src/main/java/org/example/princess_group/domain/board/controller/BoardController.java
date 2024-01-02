@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.princess_group.domain.board.dto.BoardRequest;
 import org.example.princess_group.domain.board.dto.CreateBoardRequest;
 import org.example.princess_group.domain.board.dto.UpdateBoardRequest;
+import org.example.princess_group.domain.board.service.BoardService;
 import org.example.princess_group.domain.board.service.BoardServiceImpl;
 import org.example.princess_group.global.dto.RootResponse;
 import org.springframework.http.HttpStatus;
@@ -16,7 +17,7 @@ import java.util.List;
 
 public class BoardController {
 
-    private final BoardServiceImpl boardService;
+    private final BoardService boardService;
 
     @PostMapping("/api/boards")  // 보드생성
     public CreateBoardRequest createBoard(

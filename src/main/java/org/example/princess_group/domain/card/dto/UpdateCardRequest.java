@@ -9,6 +9,8 @@ import lombok.Builder;
 @Builder
 public record UpdateCardRequest(
     Long cardId,
+    Long listId,
+    Long boardId,
     String name,
     String description,
     String color,

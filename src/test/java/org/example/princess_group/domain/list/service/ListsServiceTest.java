@@ -41,7 +41,7 @@ class ListsServiceTest {
 
     @BeforeEach
     void init(){
-        this.listsService = new ListsServiceImpl(repository,boardService,boardRepository);
+        this.listsService = new ListsServiceImpl(repository,boardService);
     }
 
     @DisplayName("리스트 조회")

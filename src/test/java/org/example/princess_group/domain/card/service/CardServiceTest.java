@@ -71,7 +71,7 @@ class CardServiceTest extends RepositoryTest {
                 var notValidListId = 2L;
                 given(listService.isValidId(notValidListId)).willReturn(false);
 
-                var request = new CreateCardRequest("test", notValidListId);
+                var request = new CreateCardRequest("test", notValidListId,1L);
                 // when // then
                 thenThrownBy(() -> cardService.createCard(request))
                     .isInstanceOf(ServiceException.class)
@@ -87,7 +87,7 @@ class CardServiceTest extends RepositoryTest {
             void when_exist_list() {
                 // given
                 var validListId = 1L;
-                var request = new CreateCardRequest("test", validListId);
+                var request = new CreateCardRequest("test", validListId,1L);
                 given(listService.isValidId(validListId)).willReturn(true);
 
                 // when
@@ -326,11 +326,11 @@ class CardServiceTest extends RepositoryTest {
             var listId = 1L;
             given(listService.isValidId(listId)).willReturn(true);
 
-            Long card1Id = cardService.createCard(new CreateCardRequest("order1", listId)).cardId();
-            Long card2Id = cardService.createCard(new CreateCardRequest("order2", listId)).cardId();
-            Long card3Id = cardService.createCard(new CreateCardRequest("order3", listId)).cardId();
+            Long card1Id = cardService.createCard(new CreateCardRequest("order1", listId,1L)).cardId();
+            Long card2Id = cardService.createCard(new CreateCardRequest("order2", listId,1L)).cardId();
+            Long card3Id = cardService.createCard(new CreateCardRequest("order3", listId,1L)).cardId();
 
-            var request = new ChangeOrderRequest(0);
+            var request = new ChangeOrderRequest(0,1L,1L,1L);
             // when
             ChangeOrderResponse response = cardService.changeOrder(card3Id, request);
             // then

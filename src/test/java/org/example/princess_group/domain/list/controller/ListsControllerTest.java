@@ -3,9 +3,11 @@ package org.example.princess_group.domain.list.controller;
 import static org.example.princess_group.domain.list.error.ListsErrorCode.LAST_ORDER;
 import static org.example.princess_group.domain.list.error.ListsErrorCode.NOT_EXIST_LIST;
 import static org.example.princess_group.domain.list.error.ListsErrorCode.NOT_EXIST_NUMBER;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
@@ -21,24 +23,47 @@ import org.example.princess_group.domain.list.dto.request.CreateListsRequest;
 import org.example.princess_group.domain.list.dto.request.OrderChangeListsRequest;
 import org.example.princess_group.domain.list.dto.response.ReadListsResponse;
 import org.example.princess_group.domain.list.dto.response.UpdateListsResponse;
-import org.example.princess_group.domain.list.repository.ListsRepository;
-import org.example.princess_group.domain.list.service.ListsService;
+import org.example.princess_group.domain.user.dto.CreateUserRequest;
 import org.example.princess_group.global.exception.ServiceException;
 import org.example.princess_group.suppport.ControllerTest;
+import org.example.princess_group.suppport.MockSpringSecurityFilter;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpSession;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
+
+
 
 @DisplayName("Lists API 테스트")
 class ListsControllerTest extends ControllerTest {
 
-    @MockBean
-    ListsService listsService;
-    @MockBean
-    ListsRepository repository;
+    MockHttpSession session;
+    MockHttpServletRequest  request;
 
+    @Autowired
+    private WebApplicationContext context;
+    @BeforeEach
+    public void setup() {
+        mockMvc = MockMvcBuilders.webAppContextSetup(context)
+            .apply(springSecurity(new MockSpringSecurityFilter()))
+            .build();
+
+        String username = "123453";
+        String password = "123453";
+        CreateUserRequest req =new CreateUserRequest(username,password);
+        session =new MockHttpSession();
+        request = new MockHttpServletRequest();
+        session.setAttribute("login_user",req);
+
+        given(authValidator.validate(any(),any(),any(),any())).willReturn(Boolean.TRUE);
+
+    }
     @Nested
     @DisplayName("list 조회")
     class getList {
@@ -56,7 +81,7 @@ class ListsControllerTest extends ControllerTest {
             //when
 
             //then
-            mockMvc.perform(get("/api/lists/1"))
+            mockMvc.perform(get("/api/lists/1").session(session))
                 .andDo(print())
                 .andExpectAll(
                     status().isOk(),
@@ -78,7 +103,7 @@ class ListsControllerTest extends ControllerTest {
             //when
 
             //then
-            mockMvc.perform(get("/api/lists/1"))
+            mockMvc.perform(get("/api/lists/1").session(session))
                 .andDo(print())
                 .andExpectAll(
                     status().isBadRequest(),
@@ -101,7 +126,7 @@ class ListsControllerTest extends ControllerTest {
             doNothing().when(listsService).createLists(1L, request);
             //when
             //then
-            mockMvc.perform(post("/api/lists/1")
+            mockMvc.perform(post("/api/lists/1").session(session)
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(request))
                 )
@@ -123,7 +148,7 @@ class ListsControllerTest extends ControllerTest {
             doThrow(new ServiceException(NOT_EXIST_LIST)).when(listsService)
                 .createLists(1L, request);
             //then
-            mockMvc.perform(post("/api/lists/1")
+            mockMvc.perform(post("/api/lists/1").session(session)
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(request))
                 )
@@ -151,7 +176,7 @@ class ListsControllerTest extends ControllerTest {
             //when
 
             //then
-            mockMvc.perform(patch("/api/lists/1")
+            mockMvc.perform(patch("/api/lists/1").session(session)
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(request))
                 )
@@ -174,7 +199,7 @@ class ListsControllerTest extends ControllerTest {
             //when
 
             //then
-            mockMvc.perform(patch("/api/lists/1")
+            mockMvc.perform(patch("/api/lists/1").session(session)
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(request))
                 )
@@ -199,7 +224,7 @@ class ListsControllerTest extends ControllerTest {
             //when
 
             //then
-            mockMvc.perform(delete("/api/lists/1"))
+            mockMvc.perform(delete("/api/lists/1").session(session))
                 .andDo(print())
                 .andExpectAll(
                     status().isOk(),
@@ -217,7 +242,7 @@ class ListsControllerTest extends ControllerTest {
             //when
 
             //then
-            mockMvc.perform(delete("/api/lists/1"))
+            mockMvc.perform(delete("/api/lists/1").session(session))
                 .andDo(print())
                 .andExpectAll(
                     status().isBadRequest(),
@@ -243,7 +268,7 @@ class ListsControllerTest extends ControllerTest {
             //when
 
             //then
-            mockMvc.perform(put("/api/lists/2")
+            mockMvc.perform(put("/api/lists/2").session(session)
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(request))
                 )
@@ -271,7 +296,7 @@ class ListsControllerTest extends ControllerTest {
             //when
 
             //then
-            mockMvc.perform(put("/api/lists/2")
+            mockMvc.perform(put("/api/lists/2").session(session)
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(request))
                 )
@@ -298,7 +323,7 @@ class ListsControllerTest extends ControllerTest {
             //when
 
             //then
-            mockMvc.perform(put("/api/lists/2")
+            mockMvc.perform(put("/api/lists/2").session(session)
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(request))
                 )
@@ -325,7 +350,7 @@ class ListsControllerTest extends ControllerTest {
             //when
 
             //then
-            mockMvc.perform(put("/api/lists/7")
+            mockMvc.perform(put("/api/lists/7").session(session)
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(request))
                 )
