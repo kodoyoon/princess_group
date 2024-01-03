@@ -114,4 +114,4 @@
             - 게시글 생성 기능 구현을 다 했다면, `develop` 로 **PR**을 날리기
         - ex) 로그인 기능 `feature/login`
 ### postman
-[](https://documenter.getpostman.com/view/32081666/2s9YsFDtZ9)
+[postman]([https://www.travis-ci.com/](https://documenter.getpostman.com/view/32081666/2s9YsFDtZ9))
